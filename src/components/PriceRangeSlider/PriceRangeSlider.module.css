@@ -1,0 +1,148 @@
+.priceRangeSlider {
+    width: 100%;
+    padding: 10px 0;
+  }
+  
+  .sliderValues {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+    color: #666;
+  }
+  
+  .sliderContainer {
+    position: relative;
+    width: 100%;
+    height: 6px;
+    margin: 20px 0;
+  }
+  
+  .sliderTrack {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #e5e7eb;
+    border-radius: 3px;
+  }
+  
+  .sliderRange {
+    position: absolute;
+    height: 100%;
+    background-color: #ff6b81;
+    border-radius: 3px;
+    z-index: 1;
+  }
+  
+  .thumb {
+    position: absolute;
+    width: 100%;
+    height: 0;
+    -webkit-appearance: none;
+    appearance: none;
+    pointer-events: none;
+    outline: none;
+    z-index: 3;
+  }
+  
+  .thumb::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    background-color: #fff;
+    border: 2px solid #ff6b81;
+    border-radius: 50%;
+    cursor: pointer;
+    pointer-events: auto;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+  }
+  
+  .thumb::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    background-color: #fff;
+    border: 2px solid #ff6b81;
+    border-radius: 50%;
+    cursor: pointer;
+    pointer-events: auto;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+  }
+  
+  .thumb::-webkit-slider-thumb:hover,
+  .thumb::-webkit-slider-thumb:active {
+    transform: scale(1.1);
+    background-color: #ff6b81;
+    border-color: #ff6b81;
+  }
+  
+  .thumb::-moz-range-thumb:hover,
+  .thumb::-moz-range-thumb:active {
+    transform: scale(1.1);
+    background-color: #ff6b81;
+    border-color: #ff6b81;
+  }
+  
+  .thumbLeft {
+    z-index: 4;
+  }
+  
+  .priceInputs {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 25px;
+  }
+  
+  .inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 45%;
+  }
+  
+  .inputGroup label {
+    font-size: 0.8rem;
+    color: #666;
+  }
+  
+  .inputGroup input {
+    padding: 10px 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    width: 100%;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  }
+  
+  .inputGroup input:focus {
+    outline: none;
+    border-color: #ff6b81;
+    box-shadow: 0 0 0 2px rgba(255, 107, 129, 0.1);
+  }
+  
+  .inputDivider {
+    font-size: 1.2rem;
+    color: #666;
+    margin: 0 5px;
+    margin-top: 20px;
+  }
+  
+  @media (max-width: 576px) {
+    .priceInputs {
+      flex-direction: column;
+      gap: 10px;
+    }
+  
+    .inputGroup {
+      width: 100%;
+    }
+  
+    .inputDivider {
+      display: none;
+    }
+  }
+  

@@ -1,0 +1,564 @@
+.productsPage {
+    padding: 40px 0;
+    background-color: #f9f9f9;
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  .pageHeader {
+    margin-bottom: 30px;
+  }
+  
+  .pageTitle {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    text-align: center;
+    position: relative;
+    color: #333;
+  }
+  
+  .breadcrumbs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    color: #666;
+  }
+  
+  .breadcrumbs span:last-child {
+    color: #ff6b81;
+  }
+  
+  .pageTitle::after {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 3px;
+    background-color: var(--primary-color);
+  }
+  
+  .filterControls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+  
+  .mobileFilterToggle {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background-color: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  }
+  
+  .mobileFilterToggle:hover {
+    background-color: #f3f4f6;
+  }
+  
+  .mobileFilterToggle i {
+    margin-right: 8px;
+  }
+  
+  .viewControls {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  
+  .resultsCount {
+    font-size: 0.95rem;
+    color: #666;
+  }
+  
+  .viewOptions {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background-color: #fff;
+    border-radius: 6px;
+    padding: 3px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  }
+  
+  .viewButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: none;
+    border: none;
+    border-radius: 4px;
+    color: #666;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .viewButton:hover {
+    background-color: #f3f4f6;
+    color: #333;
+  }
+  
+  .viewButton.active {
+    background-color: #ff6b81;
+    color: #fff;
+  }
+  
+  .sortOptions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .sortOptions label {
+    font-size: 0.95rem;
+    color: #666;
+  }
+  
+  .sortOptions select {
+    padding: 8px 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    background-color: #fff;
+    font-size: 0.95rem;
+    color: #333;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: border-color 0.2s ease;
+  }
+  
+  .sortOptions select:focus {
+    outline: none;
+    border-color: #ff6b81;
+  }
+  
+  .productsContainer {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 25px;
+  }
+  
+  /* Filters Sidebar */
+  .filtersSidebar {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    height: fit-content;
+    position: sticky;
+    top: 100px;
+  }
+  
+  .filtersHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  .filtersHeader h2 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .clearFiltersBtn {
+    font-size: 0.9rem;
+    color: #ff6b81;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+  
+  .clearFiltersBtn:hover {
+    color: #ff4757;
+    text-decoration: underline;
+  }
+  
+  .filtersList {
+    padding: 10px 0;
+  }
+  
+  .filterSection {
+    border-bottom: 1px solid #f0f0f0;
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+  }
+  
+  .filterSection:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  
+  .filterHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 15px 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .filterHeader:hover {
+    background-color: #f9f9f9;
+  }
+  
+  .filterHeader h3 {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 15px;
+  }
+  
+  .filterHeader svg {
+    color: #666;
+    transition: transform 0.3s ease;
+  }
+  
+  .filterHeader svg.expanded {
+    transform: rotate(180deg);
+  }
+  
+  .categoryList {
+    padding: 0 10px 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .categoryList li {
+    margin-bottom: 5px;
+  }
+  
+  .categoryList button {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 8px 10px;
+    background: none;
+    border: none;
+    border-radius: 6px;
+    text-align: left;
+    font-size: 0.95rem;
+    color: #666;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .categoryList button:hover {
+    background-color: #f3f4f6;
+    color: #333;
+  }
+  
+  .categoryList button.active {
+    background-color: #fff0f3;
+    color: #ff6b81;
+    font-weight: 500;
+  }
+  
+  .priceFilter {
+    padding: 10px 20px 20px;
+  }
+  
+  .brandList {
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 0 20px 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .brandList li {
+    margin-bottom: 10px;
+  }
+  
+  .checkboxLabel {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+  }
+  
+  .checkboxLabel input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+  
+  .customCheckbox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    background-color: #fff;
+    transition: all 0.2s ease;
+  }
+  
+  .checkboxLabel:hover .customCheckbox {
+    border-color: #ff6b81;
+  }
+  
+  .checkboxLabel input:checked ~ .customCheckbox {
+    background-color: #ff6b81;
+    border-color: #ff6b81;
+    color: #fff;
+  }
+  
+  .ratingFilter {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0 20px 15px;
+  }
+  
+  .ratingButton {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    background: none;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .ratingButton:hover {
+    background-color: #f3f4f6;
+  }
+  
+  .ratingButton.active {
+    background-color: #fff0f3;
+  }
+  
+  .stars {
+    display: flex;
+    align-items: center;
+  }
+  
+  .starFilled {
+    color: #ffc107;
+  }
+  
+  .starEmpty {
+    color: #e2e8f0;
+  }
+  
+  .closeFiltersBtn {
+    display: none;
+    width: 100%;
+    padding: 15px;
+    background-color: #f3f4f6;
+    color: #666;
+    border: none;
+    font-weight: 500;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  
+  /* Products Grid */
+  .productsGrid {
+    flex: 1;
+  }
+  
+  .productsWrapper {
+    display: grid;
+    gap: 20px;
+  }
+  
+  .productsWrapper.grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  }
+  
+  .productsWrapper.list {
+    grid-template-columns: 1fr;
+  }
+  
+  .loadingContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 0;
+    text-align: center;
+  }
+  
+  .loadingSpinner {
+    width: 50px;
+    height: 50px;
+    border: 3px solid #f3f4f6;
+    border-top: 3px solid #ff6b81;
+    border-radius: 50%;
+    margin-bottom: 20px;
+    animation: spin 1s linear infinite;
+  }
+  
+  .loadingContainer p {
+    color: #666;
+  }
+  
+  .noResults {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 0;
+    text-align: center;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+  
+  .noResultsIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
+    background-color: #fee2e2;
+    color: #ef4444;
+    border-radius: 50%;
+    margin-bottom: 20px;
+  }
+  
+  .noResults h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #333;
+  }
+  
+  .noResults p {
+    color: #666;
+    margin-bottom: 20px;
+  }
+  
+  .noResults .clearFiltersBtn {
+    padding: 10px 20px;
+    background-color: #ff6b81;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .noResults .clearFiltersBtn:hover {
+    background-color: #ff4757;
+  }
+  
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  
+  @media (max-width: 992px) {
+    .productsContainer {
+      grid-template-columns: 240px 1fr;
+    }
+  
+    .productsWrapper.grid {
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .mobileFilterToggle {
+      display: flex;
+      width: 100%;
+      align-items: center;
+      justify-content: center;
+    }
+  
+    .filterControls {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  
+    .viewControls {
+      width: 100%;
+      justify-content: space-between;
+    }
+  
+    .productsContainer {
+      grid-template-columns: 1fr;
+    }
+  
+    .filtersSidebar {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100vh;
+      z-index: 1000;
+      overflow-y: auto;
+      border-radius: 0;
+      padding-bottom: 80px;
+    }
+  
+    .filtersSidebar.showFilters {
+      display: block;
+    }
+  
+    .closeFiltersBtn {
+      display: flex;
+      position: sticky;
+      bottom: 0;
+    }
+  
+    .productsWrapper.grid {
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .productsWrapper.grid {
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    }
+  }
+  

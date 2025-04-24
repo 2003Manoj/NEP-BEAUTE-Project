@@ -1,0 +1,447 @@
+.registerPage {
+  padding: 60px 0;
+  background-color: var(--light-color);
+  min-height: calc(100vh - 80px);
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.registerPage::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23f0f0f0' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  opacity: 0.5;
+  z-index: 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.registerContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background-color: #fff;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  animation: fadeIn 0.8s ease-out forwards;
+}
+
+.registerImage {
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  animation: slideRight 0.5s ease-out forwards;
+}
+
+.registerImage::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to left, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0));
+  z-index: 1;
+}
+
+.registerImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 10s ease;
+}
+
+.registerContainer:hover .registerImage img {
+  transform: scale(1.1);
+}
+
+.imageContent {
+  position: absolute;
+  bottom: 50px;
+  right: 50px;
+  color: #fff;
+  z-index: 2;
+  max-width: 80%;
+  text-align: right;
+}
+
+.imageContent h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.imageContent p {
+  font-size: 1.1rem;
+  margin-bottom: 20px;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  opacity: 0.9;
+}
+
+.registerForm {
+  padding: 50px;
+  overflow-y: auto;
+  max-height: 800px;
+  animation: slideLeft 0.5s ease-out forwards;
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary-color) var(--light-gray);
+}
+
+.registerForm::-webkit-scrollbar {
+  width: 6px;
+}
+
+.registerForm::-webkit-scrollbar-track {
+  background: var(--light-gray);
+  border-radius: 10px;
+}
+
+.registerForm::-webkit-scrollbar-thumb {
+  background-color: var(--primary-color);
+  border-radius: 10px;
+}
+
+.formHeader {
+  margin-bottom: 35px;
+  text-align: center;
+}
+
+.formHeader h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+  color: var(--text-color);
+  position: relative;
+  display: inline-block;
+}
+
+.formHeader h1::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px;
+  height: 3px;
+  background-color: var(--primary-color);
+  transition: width 0.3s ease;
+}
+
+.formHeader:hover h1::after {
+  width: 70px;
+}
+
+.formHeader p {
+  color: var(--text-light);
+  font-size: 1.05rem;
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.formGroup {
+  margin-bottom: 25px;
+}
+
+.formGroup label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: 500;
+  color: var(--text-color);
+  font-size: 1rem;
+}
+
+.formGroup input {
+  width: 100%;
+  padding: 14px 15px;
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background-color: #fff;
+}
+
+.formGroup input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(255, 107, 129, 0.1);
+  outline: none;
+  transform: translateY(-2px);
+}
+
+.errorInput {
+  border-color: var(--error-color) !important;
+}
+
+.errorMessage {
+  display: block;
+  color: var(--error-color);
+  font-size: 0.9rem;
+  margin-top: 8px;
+  animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+.termsCheckbox {
+  margin-bottom: 30px;
+}
+
+.termsCheckbox label {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  color: var(--text-color);
+}
+
+.termsCheckbox input {
+  margin-top: 3px;
+  cursor: pointer;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--primary-color);
+}
+
+.errorLabel {
+  color: var(--error-color);
+}
+
+.termsLink {
+  color: var(--primary-color);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.termsLink::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background-color: var(--primary-color);
+  transition: width 0.3s ease;
+}
+
+.termsLink:hover {
+  color: var(--primary-dark);
+}
+
+.termsLink:hover::after {
+  width: 100%;
+}
+
+.registerButton {
+  width: 100%;
+  padding: 14px;
+  background-color: var(--primary-color);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: var(--shadow-primary);
+  position: relative;
+  overflow: hidden;
+}
+
+.registerButton::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: all 0.6s ease;
+}
+
+.registerButton:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(255, 107, 129, 0.4);
+}
+
+.registerButton:hover::before {
+  left: 100%;
+}
+
+.registerButton:disabled {
+  background-color: var(--text-light);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.registerButton:disabled::before {
+  display: none;
+}
+
+.orDivider {
+  position: relative;
+  text-align: center;
+  margin: 30px 0;
+}
+
+.orDivider::before,
+.orDivider::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 45%;
+  height: 1px;
+  background-color: var(--border-color);
+}
+
+.orDivider::before {
+  left: 0;
+}
+
+.orDivider::after {
+  right: 0;
+}
+
+.orDivider span {
+  display: inline-block;
+  padding: 0 15px;
+  background-color: #fff;
+  position: relative;
+  z-index: 1;
+  color: var(--text-light);
+  font-size: 0.95rem;
+}
+
+.googleButton {
+  width: 100%;
+  padding: 14px;
+  background-color: #fff;
+  color: var(--text-color);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.googleButton::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #f2f2f2;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s ease;
+  z-index: -1;
+}
+
+.googleButton:hover {
+  border-color: #4285f4;
+  color: #4285f4;
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.googleButton:hover::before {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.googleButton i {
+  color: #4285f4;
+  font-size: 1.2rem;
+}
+
+.loginLink {
+  text-align: center;
+  margin-top: 30px;
+  color: var(--text-light);
+  font-size: 1rem;
+}
+
+.signinLink {
+  color: var(--primary-color);
+  font-weight: 500;
+  transition: all 0.3s ease;
+  position: relative;
+  margin-left: 5px;
+}
+
+.signinLink::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background-color: var(--primary-color);
+  transition: width 0.3s ease;
+}
+
+.signinLink:hover {
+  color: var(--primary-dark);
+}
+
+.signinLink:hover::after {
+  width: 100%;
+}
+
+@media (max-width: 992px) {
+  .registerContainer {
+    grid-template-columns: 1fr;
+  }
+
+  .registerImage {
+    display: none;
+  }
+
+  .registerForm {
+    padding: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .registerPage {
+    padding: 40px 0;
+  }
+
+  .registerForm {
+    padding: 30px 20px;
+  }
+
+  .formHeader h1 {
+    font-size: 1.8rem;
+  }
+
+  .formRow {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
+

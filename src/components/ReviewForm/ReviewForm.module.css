@@ -1,0 +1,264 @@
+.reviewForm {
+    background-color: #f9f9f9;
+    padding: 30px;
+    border-radius: var(--radius-lg);
+    margin-top: 40px;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+    border: 1px solid var(--border-color);
+  }
+  
+  .reviewForm:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-3px);
+  }
+  
+  .reviewForm h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 25px;
+    color: var(--text-color);
+    position: relative;
+    display: inline-block;
+  }
+  
+  .reviewForm h3::after {
+    content: "";
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 40px;
+    height: 3px;
+    background-color: var(--primary-color);
+    transition: width 0.3s ease;
+  }
+  
+  .reviewForm:hover h3::after {
+    width: 60px;
+  }
+  
+  .loginPrompt {
+    background-color: var(--primary-light);
+    padding: 20px;
+    border-radius: var(--radius-md);
+    margin-bottom: 25px;
+    text-align: center;
+    border-left: 4px solid var(--primary-color);
+    animation: pulse 2s infinite;
+  }
+  
+  .loginPrompt p {
+    color: var(--text-color);
+    font-size: 0.95rem;
+  }
+  
+  .loginPrompt a {
+    color: var(--primary-color);
+    font-weight: 600;
+    text-decoration: underline;
+    transition: all 0.2s ease;
+  }
+  
+  .loginPrompt a:hover {
+    color: var(--primary-dark);
+  }
+  
+  .formGroup {
+    margin-bottom: 25px;
+  }
+  
+  .formGroup label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 500;
+    color: var(--text-color);
+  }
+  
+  .ratingSelector {
+    display: flex;
+    gap: 8px;
+  }
+  
+  .starButton {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: var(--medium-gray);
+    transition: all 0.3s ease;
+    transform-origin: center;
+  }
+  
+  .starButton:hover {
+    transform: scale(1.2);
+  }
+  
+  .starButton.filled {
+    color: #ffc107;
+    animation: starPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  }
+  
+  @keyframes starPop {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.3);
+    }
+    100% {
+      transform: scale(1.1);
+    }
+  }
+  
+  .formGroup input,
+  .formGroup textarea {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    background-color: #fff;
+  }
+  
+  .formGroup input:focus,
+  .formGroup textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(255, 107, 129, 0.1);
+    transform: translateY(-2px);
+  }
+  
+  .formGroup input:disabled,
+  .formGroup textarea:disabled {
+    background-color: var(--light-gray);
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+  
+  .errorMessage {
+    color: var(--error-color);
+    font-size: 0.9rem;
+    margin-top: 15px;
+    padding: 12px;
+    background-color: rgba(239, 68, 68, 0.1);
+    border-radius: var(--radius-md);
+    border-left: 3px solid var(--error-color);
+    animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  }
+  
+  @keyframes shake {
+    10%,
+    90% {
+      transform: translateX(-1px);
+    }
+    20%,
+    80% {
+      transform: translateX(2px);
+    }
+    30%,
+    50%,
+    70% {
+      transform: translateX(-3px);
+    }
+    40%,
+    60% {
+      transform: translateX(3px);
+    }
+  }
+  
+  .submitButton {
+    padding: 14px 30px;
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-full);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: var(--shadow-primary);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .submitButton::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: all 0.6s ease;
+  }
+  
+  .submitButton:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(255, 107, 129, 0.4);
+  }
+  
+  .submitButton:hover::before {
+    left: 100%;
+  }
+  
+  .submitButton:disabled {
+    background-color: var(--text-lighter);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+  
+  .submitButton:disabled::before {
+    display: none;
+  }
+  
+  .reviewGuidelines {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+  }
+  
+  .reviewGuidelines h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: var(--text-color);
+  }
+  
+  .guidelinesList {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .guidelinesList li {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .guidelinesList li i {
+    color: var(--primary-color);
+    margin-top: 3px;
+  }
+  
+  @media (max-width: 768px) {
+    .reviewForm {
+      padding: 20px;
+    }
+  
+    .formGroup input,
+    .formGroup textarea {
+      padding: 12px;
+    }
+  
+    .submitButton {
+      width: 100%;
+      padding: 12px;
+    }
+  }
+  

@@ -1,0 +1,333 @@
+.ordersPage {
+    padding: 40px 0;
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  .pageTitle {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 30px;
+    text-align: center;
+    position: relative;
+  }
+  
+  .pageTitle::after {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 3px;
+    background-color: var(--primary-color);
+  }
+  
+  .ordersTabs {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+  }
+  
+  .tabButton {
+    padding: 10px 20px;
+    background-color: #fff;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-color);
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .tabButton:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+  }
+  
+  .tabButton.active {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: #fff;
+  }
+  
+  .ordersList {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+  
+  .orderCard {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: var(--box-shadow);
+    overflow: hidden;
+  }
+  
+  .orderHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: var(--light-color);
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  .orderInfo h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+  }
+  
+  .orderInfo p {
+    font-size: 0.9rem;
+    color: var(--text-light);
+  }
+  
+  .statusBadge {
+    display: inline-block;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+  
+  .delivered {
+    background-color: rgba(46, 213, 115, 0.1);
+    color: #2ed573;
+  }
+  
+  .processing {
+    background-color: rgba(83, 82, 237, 0.1);
+    color: #5352ed;
+  }
+  
+  .cancelled {
+    background-color: rgba(255, 71, 87, 0.1);
+    color: var(--error-color);
+  }
+  
+  .orderItems {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .orderItem {
+    display: grid;
+    grid-template-columns: 80px 1fr auto;
+    gap: 20px;
+    align-items: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  .orderItem:last-child {
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+  
+  .itemImage {
+    width: 80px;
+    height: 80px;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  
+  .itemImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .itemInfo h4 {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 5px;
+  }
+  
+  .itemPrice {
+    font-size: 0.95rem;
+    color: var(--primary-color);
+    margin-bottom: 5px;
+  }
+  
+  .itemQuantity {
+    font-size: 0.9rem;
+    color: var(--text-light);
+  }
+  
+  .itemTotal {
+    text-align: right;
+  }
+  
+  .itemTotal p:first-child {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    margin-bottom: 5px;
+  }
+  
+  .totalPrice {
+    font-size: 1rem;
+    font-weight: 600;
+  }
+  
+  .orderFooter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: var(--light-color);
+    border-top: 1px solid var(--border-color);
+  }
+  
+  .orderTotal {
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+  
+  .orderTotal span:first-child {
+    margin-right: 10px;
+  }
+  
+  .orderActions {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .viewDetailsBtn,
+  .writeReviewBtn,
+  .cancelOrderBtn {
+    padding: 10px 15px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .viewDetailsBtn {
+    background-color: #fff;
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+  }
+  
+  .viewDetailsBtn:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+  }
+  
+  .writeReviewBtn {
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+  }
+  
+  .writeReviewBtn:hover {
+    background-color: var(--secondary-color);
+  }
+  
+  .cancelOrderBtn {
+    background-color: rgba(255, 71, 87, 0.1);
+    color: var(--error-color);
+    border: 1px solid rgba(255, 71, 87, 0.2);
+  }
+  
+  .cancelOrderBtn:hover {
+    background-color: var(--error-color);
+    color: #fff;
+  }
+  
+  .emptyState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 0;
+    text-align: center;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: var(--box-shadow);
+  }
+  
+  .emptyState i {
+    font-size: 3rem;
+    color: var(--text-light);
+    margin-bottom: 20px;
+  }
+  
+  .emptyState p {
+    font-size: 1.1rem;
+    color: var(--text-light);
+    margin-bottom: 20px;
+  }
+  
+  .shopNowBtn {
+    padding: 10px 20px;
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+  }
+  
+  .shopNowBtn:hover {
+    background-color: var(--secondary-color);
+  }
+  
+  @media (max-width: 768px) {
+    .orderHeader {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+  
+    .orderStatus {
+      align-self: flex-start;
+    }
+  
+    .orderItem {
+      grid-template-columns: 60px 1fr;
+      grid-template-rows: auto auto;
+    }
+  
+    .itemImage {
+      width: 60px;
+      height: 60px;
+      grid-row: span 2;
+    }
+  
+    .itemTotal {
+      grid-column: 2;
+      text-align: left;
+      margin-top: 10px;
+    }
+  
+    .orderFooter {
+      flex-direction: column;
+      gap: 15px;
+    }
+  
+    .orderActions {
+      width: 100%;
+      flex-direction: column;
+    }
+  
+    .viewDetailsBtn,
+    .writeReviewBtn,
+    .cancelOrderBtn {
+      width: 100%;
+      text-align: center;
+    }
+  }
+  
