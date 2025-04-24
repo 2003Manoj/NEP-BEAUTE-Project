@@ -92,7 +92,7 @@ const HomePage = () => {
   }
 
   const handleBrandClick = (brandName) => {
-    navigate(`/products?brand=${brandName}`)
+    navigate(`/products?brand=${encodeURIComponent(brandName)}`)
   }
 
   return (
@@ -125,7 +125,18 @@ const HomePage = () => {
 
           <div className={styles.brandsGrid}>
             {featuredBrands.map((brand) => (
-              <div key={brand.name} className={styles.brandCard} onClick={() => handleBrandClick(brand.name)}>
+              <div
+                key={brand.name}
+                className={styles.brandCard}
+                onClick={() => handleBrandClick(brand.name)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    handleBrandClick(brand.name)
+                  }
+                }}
+              >
                 <div className={styles.brandLogo}>
                   <img src={brand.logo || "/placeholder.svg"} alt={brand.name} />
                 </div>

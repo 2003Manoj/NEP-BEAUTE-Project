@@ -7,18 +7,28 @@ import { useWishlist } from "../../contexts/WishlistContext"
 import { X, Heart, ShoppingBag, Star, ChevronLeft, ChevronRight } from "lucide-react"
 import styles from "./ProductQuickView.module.css"
 
+
 const ProductQuickView = ({ product, onClose }) => {
   const [quantity, setQuantity] = useState(1)
   const [activeImage, setActiveImage] = useState(0)
   const { addToCart } = useCart()
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist()
 
-  // Mock product images
-  const productImages = [
-    product.image,
-    `https://source.unsplash.com/random/600x800/?${product.category},beauty,1`,
-    `https://source.unsplash.com/random/600x800/?${product.category},beauty,2`,
-  ]
+  // Generate additional images by adding query parameters to the original URL
+  const generateAdditionalImages = (originalUrl) => {
+    // Extract base URL and query parameters
+    const [baseUrl, queryParams] = originalUrl.split("?")
+
+    // Create variations by adding different query parameters
+    return [
+      originalUrl,
+      `${baseUrl}?${queryParams ? queryParams + "&" : ""}v=1`,
+      `${baseUrl}?${queryParams ? queryParams + "&" : ""}v=2`,
+    ]
+  }
+
+  // Use the product's actual image and generate variations
+  const productImages = generateAdditionalImages(product.image)
 
   useEffect(() => {
     // Prevent body scroll when modal is open
@@ -69,20 +79,20 @@ const ProductQuickView = ({ product, onClose }) => {
   return (
     <div className={styles.overlay} onClick={onClose}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-        <button className={styles.closeButton} onClick={onClose}>
+        <button className={styles.closeButton} onClick={onClose} aria-label="Close">
           <X size={20} />
         </button>
 
         <div className={styles.modalContent}>
           <div className={styles.productImages}>
             <div className={styles.mainImage}>
-              <button className={styles.imageNav} onClick={prevImage}>
+              <button className={styles.imageNav} onClick={prevImage} aria-label="Previous image">
                 <ChevronLeft size={20} />
               </button>
 
               <img src={productImages[activeImage] || "/placeholder.svg"} alt={product.name} />
 
-              <button className={styles.imageNav} onClick={nextImage}>
+              <button className={styles.imageNav} onClick={nextImage} aria-label="Next image">
                 <ChevronRight size={20} />
               </button>
 
@@ -115,10 +125,7 @@ const ProductQuickView = ({ product, onClose }) => {
             </div>
 
             <div className={styles.priceContainer}>
-              <span className={styles.price}>Rs. {product.price.toLocaleString()}</span>
-              {product.originalPrice && (
-                <span className={styles.originalPrice}>Rs. {product.originalPrice.toLocaleString()}</span>
-              )}
+              <PriceDisplay price={product.price} originalPrice={product.originalPrice} size="large" />
             </div>
 
             <div className={styles.description}>
@@ -127,14 +134,19 @@ const ProductQuickView = ({ product, onClose }) => {
 
             <div className={styles.actions}>
               <div className={styles.quantitySelector}>
-                <button onClick={decreaseQuantity}>-</button>
+                <button onClick={decreaseQuantity} aria-label="Decrease quantity">
+                  -
+                </button>
                 <input
                   type="number"
                   min="1"
                   value={quantity}
                   onChange={(e) => setQuantity(Math.max(1, Number.parseInt(e.target.value) || 1))}
+                  aria-label="Quantity"
                 />
-                <button onClick={increaseQuantity}>+</button>
+                <button onClick={increaseQuantity} aria-label="Increase quantity">
+                  +
+                </button>
               </div>
 
               <button className={styles.addToCartBtn} onClick={handleAddToCart}>
@@ -145,6 +157,7 @@ const ProductQuickView = ({ product, onClose }) => {
               <button
                 className={`${styles.wishlistBtn} ${isInWishlist(product.id) ? styles.active : ""}`}
                 onClick={handleWishlistToggle}
+                aria-label={isInWishlist(product.id) ? "Remove from wishlist" : "Add to wishlist"}
               >
                 <Heart size={18} fill={isInWishlist(product.id) ? "currentColor" : "none"} />
               </button>

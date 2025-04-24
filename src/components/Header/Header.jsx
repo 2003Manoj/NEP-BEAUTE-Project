@@ -6,7 +6,6 @@ import { useAuth } from "../../contexts/AuthContext"
 import { useCart } from "../../contexts/CartContext"
 import { useWishlist } from "../../contexts/WishlistContext"
 import SearchBar from "../SearchBar/SearchBar"
-import CurrencySelector from "../CurrencySelector/CurrencySelector"
 import { User, ShoppingCart, Heart, LogOut, Package, ChevronDown, Menu, X } from "lucide-react"
 import styles from "./Header.module.css"
 
@@ -109,9 +108,7 @@ const Header = () => {
         </nav>
 
         <div className={styles.actions}>
-          <div className={styles.currencySelectorContainer}>
-            <CurrencySelector />
-          </div>
+         
           <Link to="/wishlist" className={styles.wishlistIcon}>
             <Heart size={20} />
             {totalWishlistItems > 0 && <span className={styles.wishlistCount}>{totalWishlistItems}</span>}
@@ -285,9 +282,7 @@ const Header = () => {
               )}
             </ul>
 
-            <div className={styles.mobileCurrencySelector}>
-              <CurrencySelector />
-            </div>
+            
           </div>
         </div>
       )}

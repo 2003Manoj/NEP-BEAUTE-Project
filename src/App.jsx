@@ -18,6 +18,7 @@ import ComparePage from "./pages/ComparePage/ComparePage"
 import CompareBar from "./components/CompareBar/CompareBar"
 import { CartProvider } from "./contexts/CartContext"
 import { AuthProvider } from "./contexts/AuthContext"
+
 import { WishlistProvider } from "./contexts/WishlistContext"
 import { CompareProvider } from "./contexts/CompareContext"
 import { RecentlyViewedProvider } from "./contexts/RecentlyViewedContext"
@@ -47,7 +48,7 @@ function App() {
       <AuthProvider>
         <CartProvider>
           <WishlistProvider>
-          
+            
               <CompareProvider>
                 <RecentlyViewedProvider>
                   <div className="app">

@@ -7,6 +7,7 @@ import PriceRangeSlider from "../../components/PriceRangeSlider/PriceRangeSlider
 import { getProducts } from "../../services/productService"
 import { Filter, SlidersHorizontal, ChevronDown, X, Check, Grid, List, Star } from "lucide-react"
 import styles from "./ProductsPage.module.css"
+import ProductQuickView from "../../components/ProductQuickView/ProductQuickView"
 
 const ProductsPage = () => {
   const { category } = useParams()
@@ -19,6 +20,7 @@ const ProductsPage = () => {
   const [products, setProducts] = useState([])
   const [filteredProducts, setFilteredProducts] = useState([])
   const [loading, setLoading] = useState(true)
+  const [quickViewProduct, setQuickViewProduct] = useState(null)
   const [filters, setFilters] = useState({
     category: category || "all",
     priceRange: [0, 10000],
@@ -94,7 +96,10 @@ const ProductsPage = () => {
   useEffect(() => {
     // Update brand filter when URL param changes
     if (brandParam) {
-      setFilters((prev) => ({ ...prev, brands: [brandParam] }))
+      setFilters((prev) => ({
+        ...prev,
+        brands: prev.brands.includes(brandParam) ? prev.brands : [brandParam],
+      }))
     }
   }, [brandParam])
 
@@ -238,6 +243,14 @@ const ProductsPage = () => {
     }
 
     return "All Products"
+  }
+
+  const openQuickView = (product) => {
+    setQuickViewProduct(product)
+  }
+
+  const closeQuickView = () => {
+    setQuickViewProduct(null)
   }
 
   return (
@@ -484,13 +497,21 @@ const ProductsPage = () => {
             ) : (
               <div className={`${styles.productsWrapper} ${styles[viewMode]}`}>
                 {filteredProducts.map((product) => (
-                  <ProductCard key={product.id} product={product} horizontal={viewMode === "list"} />
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    horizontal={viewMode === "list"}
+                    openQuickView={() => openQuickView(product)}
+                  />
                 ))}
               </div>
             )}
           </div>
         </div>
       </div>
+
+      {/* Quick View Modal */}
+      {quickViewProduct && <ProductQuickView product={quickViewProduct} onClose={closeQuickView} />}
     </div>
   )
 }

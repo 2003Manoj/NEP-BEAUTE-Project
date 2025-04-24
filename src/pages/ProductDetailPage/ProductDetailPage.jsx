@@ -4,15 +4,24 @@ import { useState, useEffect } from "react"
 import { useParams, Link, useNavigate } from "react-router-dom"
 import { useCart } from "../../contexts/CartContext"
 import { useWishlist } from "../../contexts/WishlistContext"
+import { useCompare } from "../../contexts/CompareContext"
+import { useRecentlyViewed } from "../../contexts/RecentlyViewedContext"
 import { useAuth } from "../../contexts/AuthContext"
 import ProductCard from "../../components/ProductCard/ProductCard"
+
+import ReviewList from "../../components/ReviewList/ReviewList"
+import ReviewForm from "../../components/ReviewForm/ReviewForm"
 import { getProductById, getRelatedProducts } from "../../services/productService"
+import { ChevronLeft, ChevronRight, Star, ShoppingBag, Heart, Share2, BarChart2, Check } from "lucide-react"
 import styles from "./ProductDetailPage.module.css"
+
 
 const ProductDetailPage = () => {
   const { id } = useParams()
   const { addToCart } = useCart()
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist()
+  const { addToCompare, isInCompare } = useCompare()
+  const { addToRecentlyViewed } = useRecentlyViewed()
   const { user } = useAuth()
   const navigate = useNavigate()
 
@@ -22,8 +31,9 @@ const ProductDetailPage = () => {
   const [quantity, setQuantity] = useState(1)
   const [activeTab, setActiveTab] = useState("description")
   const [activeImage, setActiveImage] = useState(0)
+  const [reviews, setReviews] = useState([])
 
-  // Mock product images
+  // Product images
   const [productImages, setProductImages] = useState([])
 
   useEffect(() => {
@@ -33,17 +43,25 @@ const ProductDetailPage = () => {
         const productData = await getProductById(id)
         setProduct(productData)
 
+        // Add to recently viewed
+        addToRecentlyViewed(productData)
+
         // Generate multiple images for the product
+        // Use the product's main image and generate variations for additional views
         setProductImages([
           productData.image,
-          `https://source.unsplash.com/random/600x800/?${productData.category},beauty,1`,
-          `https://source.unsplash.com/random/600x800/?${productData.category},beauty,2`,
-          `https://source.unsplash.com/random/600x800/?${productData.category},beauty,3`,
+          productData.image.replace("w=600", "w=601"), // Slight URL variation to get different image
+          productData.image.replace("w=600", "w=602"), // Slight URL variation to get different image
+          productData.image.replace("w=600", "w=603"), // Slight URL variation to get different image
         ])
 
         // Fetch related products
         const related = await getRelatedProducts(productData.category, id)
         setRelatedProducts(related)
+
+        // Generate mock reviews
+        const mockReviews = generateMockReviews(productData.reviewCount, productData.rating)
+        setReviews(mockReviews)
 
         setLoading(false)
       } catch (error) {
@@ -53,7 +71,98 @@ const ProductDetailPage = () => {
     }
 
     fetchProduct()
-  }, [id])
+  }, [id, addToRecentlyViewed])
+
+  const generateMockReviews = (count, avgRating) => {
+    const mockReviews = []
+    const names = [
+      "Priya Sharma",
+      "Rajesh Thapa",
+      "Anita Gurung",
+      "Sunil Patel",
+      "Meera Joshi",
+      "Arun Kumar",
+      "Sita Rai",
+      "Deepak Shrestha",
+    ]
+    const titles = [
+      "Great product!",
+      "Highly recommended",
+      "Worth the money",
+      "Not what I expected",
+      "Amazing results",
+      "Will buy again",
+      "Good quality",
+      "Excellent purchase",
+    ]
+    const comments = [
+      "This product exceeded my expectations. My skin feels so much better after using it for just a week.",
+      "I've tried many similar products, but this one is definitely the best. Will purchase again!",
+      "The quality is good, but I think it's a bit overpriced for what you get.",
+      "I love how this product feels on my skin. It's gentle yet effective.",
+      "Not sure if it's working for me. I've been using it for two weeks with minimal results.",
+      "The packaging is beautiful and the product works as described. Very happy with my purchase!",
+      "This has become an essential part of my daily routine. Can't imagine going without it now.",
+      "I bought this based on the reviews and I'm not disappointed. It's as good as everyone says.",
+    ]
+
+    // Create a distribution of ratings that averages to avgRating
+    const ratingDistribution = createRatingDistribution(count, avgRating)
+
+    for (let i = 0; i < Math.min(count, 20); i++) {
+      const rating = ratingDistribution[i] || Math.floor(Math.random() * 3) + 3 // Default to 3-5 stars
+      const nameIndex = Math.floor(Math.random() * names.length)
+      const titleIndex = Math.floor(Math.random() * titles.length)
+      const commentIndex = Math.floor(Math.random() * comments.length)
+      const daysAgo = Math.floor(Math.random() * 60) // Random date within last 60 days
+      const helpfulCount = Math.floor(Math.random() * 20)
+      const verified = Math.random() > 0.3 // 70% chance of being verified
+
+      mockReviews.push({
+        id: `review-${i + 1}`,
+        userId: `user-${i + 1}`,
+        userName: names[nameIndex],
+        userImage: `https://randomuser.me/api/portraits/${Math.random() > 0.5 ? "women" : "men"}/${Math.floor(Math.random() * 100)}.jpg`,
+        rating,
+        title: titles[titleIndex],
+        text: comments[commentIndex],
+        date: new Date(Date.now() - daysAgo * 24 * 60 * 60 * 1000).toISOString(),
+        helpfulCount,
+        verified,
+      })
+    }
+
+    return mockReviews
+  }
+
+  // Helper function to create a distribution of ratings that averages to the target
+  const createRatingDistribution = (count, targetAvg) => {
+    const distribution = []
+    let sum = 0
+
+    for (let i = 0; i < count - 1; i++) {
+      // Generate ratings between 1 and 5, with a bias toward the target average
+      let rating
+      if (Math.random() < 0.7) {
+        // 70% chance of being close to target
+        rating = Math.max(1, Math.min(5, Math.round(targetAvg + (Math.random() - 0.5) * 2)))
+      } else {
+        // 30% chance of being any rating
+        rating = Math.floor(Math.random() * 5) + 1
+      }
+
+      distribution.push(rating)
+      sum += rating
+    }
+
+    // Calculate the last rating to achieve the target average
+    const lastRating = Math.round((targetAvg * count - sum) * 10) / 10
+
+    // Ensure the last rating is between 1 and 5
+    distribution.push(Math.max(1, Math.min(5, Math.round(lastRating))))
+
+    return distribution
+  }
 
   const handleQuantityChange = (e) => {
     const value = Number.parseInt(e.target.value)
@@ -91,6 +200,35 @@ const ProductDetailPage = () => {
     }
   }
 
+  const handleCompareToggle = () => {
+    if (product) {
+      addToCompare(product)
+    }
+  }
+
+  const handleShareProduct = () => {
+    if (navigator.share) {
+      navigator
+        .share({
+          title: product.name,
+          text: `Check out ${product.name} on NepBeaute`,
+          url: window.location.href,
+        })
+        .then(() => console.log("Successful share"))
+        .catch((error) => console.log("Error sharing:", error))
+    } else {
+      // Fallback for browsers that don't support the Web Share API
+      navigator.clipboard
+        .writeText(window.location.href)
+        .then(() => alert("Link copied to clipboard!"))
+        .catch((error) => console.error("Could not copy text: ", error))
+    }
+  }
+
+  const handleReviewSubmit = (newReview) => {
+    setReviews([newReview, ...reviews])
+  }
+
   if (loading) {
     return (
       <div className={styles.loadingContainer}>
@@ -117,6 +255,7 @@ const ProductDetailPage = () => {
     : 0
 
   const isProductInWishlist = isInWishlist(product.id)
+  const isProductInCompare = isInCompare(product.id)
 
   return (
     <div className={styles.productDetailPage}>
@@ -146,39 +285,58 @@ const ProductDetailPage = () => {
               ))}
             </div>
             <div className={styles.mainImage}>
+              <button
+                className={styles.imageNav}
+                onClick={() => setActiveImage((activeImage - 1 + productImages.length) % productImages.length)}
+              >
+                <ChevronLeft size={20} />
+              </button>
+
               <img src={productImages[activeImage] || "/placeholder.svg"} alt={product.name} />
-              {product.isNew && <span className={`${styles.badge} ${styles.newBadge}`}>New</span>}
+
+              <button
+                className={styles.imageNav}
+                onClick={() => setActiveImage((activeImage + 1) % productImages.length)}
+              >
+                <ChevronRight size={20} />
+              </button>
+
+              {product.isNew && <div className={`${styles.badge} ${styles.newBadge}`}>NEW</div>}
               {discountPercentage > 0 && (
-                <span className={`${styles.badge} ${styles.discountBadge}`}>-{discountPercentage}%</span>
+                <div className={`${styles.badge} ${styles.discountBadge}`}>{discountPercentage}% OFF</div>
               )}
             </div>
           </div>
 
           {/* Product Info */}
           <div className={styles.productInfo}>
+            <div className={styles.productBrand}>{product.brand}</div>
             <h1 className={styles.productName}>{product.name}</h1>
 
             <div className={styles.productMeta}>
               <div className={styles.rating}>
-                {[...Array(5)].map((_, i) => (
-                  <i key={i} className={`fas fa-star ${i < product.rating ? styles.filled : styles.empty}`}></i>
-                ))}
+                <div className={styles.ratingStars}>
+                  <Star size={14} fill="currentColor" strokeWidth={0} />
+                  <span>{product.rating}</span>
+                </div>
                 <span className={styles.ratingCount}>({product.reviewCount} reviews)</span>
               </div>
 
-              <div className={styles.brand}>
-                <span>Brand:</span> {product.brand}
+              <div className={styles.stockStatus}>
+                <span className={styles.inStock}>
+                  <Check size={14} />
+                  In Stock
+                </span>
               </div>
             </div>
 
             <div className={styles.priceContainer}>
-              <span className={styles.price}>Rs. {product.price.toLocaleString()}</span>
-              {product.originalPrice && (
-                <span className={styles.originalPrice}>Rs. {product.originalPrice.toLocaleString()}</span>
-              )}
+              <PriceDisplay price={product.price} originalPrice={product.originalPrice} size="xlarge" />
             </div>
 
             <p className={styles.productDescription}>{product.description}</p>
+
+            <div className={styles.divider}></div>
 
             <div className={styles.quantitySelector}>
               <span>Quantity:</span>
@@ -191,15 +349,50 @@ const ProductDetailPage = () => {
 
             <div className={styles.actions}>
               <button className={styles.addToCartBtn} onClick={handleAddToCart}>
-                <i className="fas fa-shopping-cart"></i> Add to Cart
+                <ShoppingBag size={18} />
+                Add to Cart
               </button>
+
               <button
-                className={`${styles.wishlistBtn} ${isProductInWishlist ? styles.inWishlist : ""}`}
+                className={`${styles.wishlistBtn} ${isProductInWishlist ? styles.active : ""}`}
                 onClick={handleWishlistToggle}
+                aria-label={isProductInWishlist ? "Remove from wishlist" : "Add to wishlist"}
               >
-                <i className={isProductInWishlist ? "fas fa-heart" : "far fa-heart"}></i>
-                {isProductInWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
+                <Heart size={18} fill={isProductInWishlist ? "currentColor" : "none"} />
               </button>
+
+              <button
+                className={`${styles.compareBtn} ${isProductInCompare ? styles.active : ""}`}
+                onClick={handleCompareToggle}
+                aria-label="Add to compare"
+              >
+                <BarChart2 size={18} />
+              </button>
+
+              <button className={styles.shareBtn} onClick={handleShareProduct} aria-label="Share product">
+                <Share2 size={18} />
+              </button>
+            </div>
+
+            <div className={styles.divider}></div>
+
+            <div className={styles.productDetails}>
+              <div className={styles.detailItem}>
+                <span className={styles.detailLabel}>SKU:</span>
+                <span className={styles.detailValue}>{product.id}</span>
+              </div>
+              <div className={styles.detailItem}>
+                <span className={styles.detailLabel}>Category:</span>
+                <span className={styles.detailValue}>
+                  <Link to={`/products/${product.category}`}>{product.category}</Link>
+                </span>
+              </div>
+              <div className={styles.detailItem}>
+                <span className={styles.detailLabel}>Brand:</span>
+                <span className={styles.detailValue}>
+                  <Link to={`/brands/${product.brand}`}>{product.brand}</Link>
+                </span>
+              </div>
             </div>
 
             <div className={styles.deliveryInfo}>
@@ -214,18 +407,6 @@ const ProductDetailPage = () => {
               <div className={styles.infoItem}>
                 <i className="fas fa-shield-alt"></i>
                 <span>100% authentic products</span>
-              </div>
-            </div>
-
-            <div className={styles.paymentMethods}>
-              <span>Payment Methods:</span>
-              <div className={styles.paymentIcons}>
-                <img
-                  src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Khalti_Digital_Wallet_Logo.png"
-                  alt="Khalti"
-                />
-                <img src="https://esewa.com.np/common/images/esewa_logo.png" alt="eSewa" />
-                <img src="https://cdn-icons-png.flaticon.com/512/1554/1554401.png" alt="Cash on Delivery" />
               </div>
             </div>
           </div>
@@ -300,115 +481,8 @@ const ProductDetailPage = () => {
 
             {activeTab === "reviews" && (
               <div className={styles.reviewsTab}>
-                <div className={styles.reviewSummary}>
-                  <div className={styles.averageRating}>
-                    <span className={styles.ratingNumber}>{product.rating}</span>
-                    <div className={styles.ratingStars}>
-                      {[...Array(5)].map((_, i) => (
-                        <i key={i} className={`fas fa-star ${i < product.rating ? styles.filled : styles.empty}`}></i>
-                      ))}
-                      <span>Based on {product.reviewCount} reviews</span>
-                    </div>
-                  </div>
-
-                  <div className={styles.ratingBars}>
-                    {[5, 4, 3, 2, 1].map((star) => (
-                      <div key={star} className={styles.ratingBar}>
-                        <span>{star} star</span>
-                        <div className={styles.barContainer}>
-                          <div className={styles.bar} style={{ width: `${Math.random() * 100}%` }}></div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className={styles.reviewsList}>
-                  {/* Mock reviews */}
-                  <div className={styles.reviewItem}>
-                    <div className={styles.reviewHeader}>
-                      <div className={styles.reviewerInfo}>
-                        <img src="https://randomuser.me/api/portraits/women/32.jpg" alt="Reviewer" />
-                        <div>
-                          <h4>Priya Sharma</h4>
-                          <span>2 days ago</span>
-                        </div>
-                      </div>
-                      <div className={styles.reviewRating}>
-                        {[...Array(5)].map((_, i) => (
-                          <i key={i} className={`fas fa-star ${i < 5 ? styles.filled : styles.empty}`}></i>
-                        ))}
-                      </div>
-                    </div>
-                    <p className={styles.reviewText}>
-                      I've been using this product for a month now and I'm very happy with the results. My skin feels
-                      much smoother and looks brighter. Will definitely purchase again!
-                    </p>
-                  </div>
-
-                  <div className={styles.reviewItem}>
-                    <div className={styles.reviewHeader}>
-                      <div className={styles.reviewerInfo}>
-                        <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="Reviewer" />
-                        <div>
-                          <h4>Rajesh Thapa</h4>
-                          <span>1 week ago</span>
-                        </div>
-                      </div>
-                      <div className={styles.reviewRating}>
-                        {[...Array(5)].map((_, i) => (
-                          <i key={i} className={`fas fa-star ${i < 4 ? styles.filled : styles.empty}`}></i>
-                        ))}
-                      </div>
-                    </div>
-                    <p className={styles.reviewText}>
-                      Good product for the price. The packaging is nice and the delivery was quick. I would recommend it
-                      to others.
-                    </p>
-                  </div>
-
-                  <div className={styles.reviewItem}>
-                    <div className={styles.reviewHeader}>
-                      <div className={styles.reviewerInfo}>
-                        <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Reviewer" />
-                        <div>
-                          <h4>Anita Gurung</h4>
-                          <span>2 weeks ago</span>
-                        </div>
-                      </div>
-                      <div className={styles.reviewRating}>
-                        {[...Array(5)].map((_, i) => (
-                          <i key={i} className={`fas fa-star ${i < 5 ? styles.filled : styles.empty}`}></i>
-                        ))}
-                      </div>
-                    </div>
-                    <p className={styles.reviewText}>
-                      Absolutely love this product! It has a nice fragrance and works really well for my sensitive skin.
-                      The natural ingredients make it stand out from other similar products in the market.
-                    </p>
-                  </div>
-                </div>
-
-                <div className={styles.writeReview}>
-                  <h3>Write a Review</h3>
-                  <form className={styles.reviewForm}>
-                    <div className={styles.formGroup}>
-                      <label>Your Rating</label>
-                      <div className={styles.ratingSelector}>
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <i key={star} className="far fa-star"></i>
-                        ))}
-                      </div>
-                    </div>
-                    <div className={styles.formGroup}>
-                      <label>Your Review</label>
-                      <textarea rows="4" placeholder="Write your review here..."></textarea>
-                    </div>
-                    <button type="submit" className={styles.submitReviewBtn}>
-                      Submit Review
-                    </button>
-                  </form>
-                </div>
+                <ReviewList reviews={reviews} productRating={product.rating} />
+                <ReviewForm productId={product.id} onReviewSubmit={handleReviewSubmit} />
               </div>
             )}
           </div>
@@ -423,6 +497,9 @@ const ProductDetailPage = () => {
             ))}
           </div>
         </div>
+
+        {/* Recently Viewed Products */}
+        <RecentlyViewed />
       </div>
     </div>
   )
