@@ -6,13 +6,14 @@ import { useAuth } from "../../contexts/AuthContext"
 import { useCart } from "../../contexts/CartContext"
 import { useWishlist } from "../../contexts/WishlistContext"
 import SearchBar from "../SearchBar/SearchBar"
-// import CurrencySelector from "../CurrencySelector/CurrencySelector"
-import { User, ShoppingCart, Heart, LogOut, Package, ChevronDown, Menu, X, Search } from 'lucide-react'
+import CurrencySelector from "../CurrencySelector/CurrencySelector"
+import { User, ShoppingCart, Heart, LogOut, Package, ChevronDown, Menu, X } from "lucide-react"
 import styles from "./Header.module.css"
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isMobileView, setIsMobileView] = useState(false)
   const { user, logout } = useAuth()
   const { cartItems } = useCart()
   const { wishlistItems } = useWishlist()
@@ -27,8 +28,20 @@ const Header = () => {
       }
     }
 
+    const handleResize = () => {
+      setIsMobileView(window.innerWidth <= 768)
+    }
+
     window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
+    window.addEventListener("resize", handleResize)
+
+    // Initial check
+    handleResize()
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll)
+      window.removeEventListener("resize", handleResize)
+    }
   }, [])
 
   const handleLogout = () => {
@@ -38,6 +51,10 @@ const Header = () => {
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen)
+  }
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false)
   }
 
   const totalCartItems = cartItems.reduce((total, item) => total + item.quantity, 0)
@@ -56,35 +73,23 @@ const Header = () => {
           <SearchBar />
         </div>
 
-        <nav className={`${styles.nav} ${isMobileMenuOpen ? styles.active : ""}`}>
+        <nav className={styles.nav}>
           <ul className={styles.navList}>
             <li>
-              <Link to="/" onClick={() => setIsMobileMenuOpen(false)}>
-                Home
-              </Link>
+              <Link to="/">Home</Link>
             </li>
             <li>
-              <Link to="/products" onClick={() => setIsMobileMenuOpen(false)}>
-                Products
-              </Link>
+              <Link to="/products">Products</Link>
             </li>
             <li className={styles.dropdown}>
               <span className={styles.dropdownTrigger}>
                 Categories <ChevronDown size={16} className={styles.dropdownIcon} />
               </span>
               <div className={styles.dropdownContent}>
-                <Link to="/products/skincare" onClick={() => setIsMobileMenuOpen(false)}>
-                  Skincare
-                </Link>
-                <Link to="/products/makeup" onClick={() => setIsMobileMenuOpen(false)}>
-                  Makeup
-                </Link>
-                <Link to="/products/haircare" onClick={() => setIsMobileMenuOpen(false)}>
-                  Haircare
-                </Link>
-                <Link to="/products/fragrance" onClick={() => setIsMobileMenuOpen(false)}>
-                  Fragrance
-                </Link>
+                <Link to="/products/skincare">Skincare</Link>
+                <Link to="/products/makeup">Makeup</Link>
+                <Link to="/products/haircare">Haircare</Link>
+                <Link to="/products/fragrance">Fragrance</Link>
               </div>
             </li>
             <li className={styles.dropdown}>
@@ -92,31 +97,21 @@ const Header = () => {
                 Brands <ChevronDown size={16} className={styles.dropdownIcon} />
               </span>
               <div className={styles.dropdownContent}>
-                <Link to="/products?brand=Himalaya" onClick={() => setIsMobileMenuOpen(false)}>
-                  Himalaya
-                </Link>
-                <Link to="/products?brand=Dabur" onClick={() => setIsMobileMenuOpen(false)}>
-                  Dabur
-                </Link>
-                <Link to="/products?brand=Patanjali" onClick={() => setIsMobileMenuOpen(false)}>
-                  Patanjali
-                </Link>
-                <Link to="/products?brand=Lotus" onClick={() => setIsMobileMenuOpen(false)}>
-                  Lotus
-                </Link>
-                <Link to="/products?brand=Lakme" onClick={() => setIsMobileMenuOpen(false)}>
-                  Lakme
-                </Link>
-                <Link to="/products?brand=Maybelline" onClick={() => setIsMobileMenuOpen(false)}>
-                  Maybelline
-                </Link>
+                <Link to="/products?brand=Himalaya">Himalaya</Link>
+                <Link to="/products?brand=Dabur">Dabur</Link>
+                <Link to="/products?brand=Patanjali">Patanjali</Link>
+                <Link to="/products?brand=Lotus">Lotus</Link>
+                <Link to="/products?brand=Lakme">Lakme</Link>
+                <Link to="/products?brand=Maybelline">Maybelline</Link>
               </div>
             </li>
           </ul>
         </nav>
 
         <div className={styles.actions}>
-          
+          <div className={styles.currencySelectorContainer}>
+            <CurrencySelector />
+          </div>
           <Link to="/wishlist" className={styles.wishlistIcon}>
             <Heart size={20} />
             {totalWishlistItems > 0 && <span className={styles.wishlistCount}>{totalWishlistItems}</span>}
@@ -158,11 +153,144 @@ const Header = () => {
             </Link>
           )}
 
-          <button className={styles.mobileMenuButton} onClick={toggleMobileMenu}>
-            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          {isMobileView && (
+            <button className={styles.mobileMenuButton} onClick={toggleMobileMenu}>
+              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          )}
         </div>
       </div>
+
+      {/* Mobile Menu */}
+      {isMobileView && (
+        <div className={`${styles.mobileNav} ${isMobileMenuOpen ? styles.active : ""}`}>
+          <div className={styles.mobileNavContent}>
+            <div className={styles.mobileSearchContainer}>
+              <SearchBar />
+            </div>
+
+            <ul className={styles.mobileNavList}>
+              <li className={styles.mobileNavItem}>
+                <Link to="/" className={styles.mobileNavLink} onClick={closeMobileMenu}>
+                  Home
+                </Link>
+              </li>
+              <li className={styles.mobileNavItem}>
+                <Link to="/products" className={styles.mobileNavLink} onClick={closeMobileMenu}>
+                  Products
+                </Link>
+              </li>
+              <li className={styles.mobileNavItem}>
+                <div
+                  className={styles.mobileNavLink}
+                  onClick={() => {
+                    const subMenu = document.getElementById("categoriesSubMenu")
+                    subMenu.classList.toggle(styles.active)
+                  }}
+                >
+                  Categories
+                  <ChevronDown size={16} />
+                </div>
+                <div id="categoriesSubMenu" className={styles.mobileSubMenu}>
+                  <Link to="/products/skincare" onClick={closeMobileMenu}>
+                    Skincare
+                  </Link>
+                  <Link to="/products/makeup" onClick={closeMobileMenu}>
+                    Makeup
+                  </Link>
+                  <Link to="/products/haircare" onClick={closeMobileMenu}>
+                    Haircare
+                  </Link>
+                  <Link to="/products/fragrance" onClick={closeMobileMenu}>
+                    Fragrance
+                  </Link>
+                </div>
+              </li>
+              <li className={styles.mobileNavItem}>
+                <div
+                  className={styles.mobileNavLink}
+                  onClick={() => {
+                    const subMenu = document.getElementById("brandsSubMenu")
+                    subMenu.classList.toggle(styles.active)
+                  }}
+                >
+                  Brands
+                  <ChevronDown size={16} />
+                </div>
+                <div id="brandsSubMenu" className={styles.mobileSubMenu}>
+                  <Link to="/products?brand=Himalaya" onClick={closeMobileMenu}>
+                    Himalaya
+                  </Link>
+                  <Link to="/products?brand=Dabur" onClick={closeMobileMenu}>
+                    Dabur
+                  </Link>
+                  <Link to="/products?brand=Patanjali" onClick={closeMobileMenu}>
+                    Patanjali
+                  </Link>
+                  <Link to="/products?brand=Lotus" onClick={closeMobileMenu}>
+                    Lotus
+                  </Link>
+                  <Link to="/products?brand=Lakme" onClick={closeMobileMenu}>
+                    Lakme
+                  </Link>
+                  <Link to="/products?brand=Maybelline" onClick={closeMobileMenu}>
+                    Maybelline
+                  </Link>
+                </div>
+              </li>
+              <li className={styles.mobileNavItem}>
+                <Link to="/wishlist" className={styles.mobileNavLink} onClick={closeMobileMenu}>
+                  My Wishlist
+                  {totalWishlistItems > 0 && <span className={styles.mobileNavBadge}>{totalWishlistItems}</span>}
+                </Link>
+              </li>
+              <li className={styles.mobileNavItem}>
+                <Link to="/cart" className={styles.mobileNavLink} onClick={closeMobileMenu}>
+                  My Cart
+                  {totalCartItems > 0 && <span className={styles.mobileNavBadge}>{totalCartItems}</span>}
+                </Link>
+              </li>
+              {user ? (
+                <>
+                  <li className={styles.mobileNavItem}>
+                    <Link to="/profile" className={styles.mobileNavLink} onClick={closeMobileMenu}>
+                      My Profile
+                    </Link>
+                  </li>
+                  <li className={styles.mobileNavItem}>
+                    <Link to="/orders" className={styles.mobileNavLink} onClick={closeMobileMenu}>
+                      My Orders
+                    </Link>
+                  </li>
+                  <li className={styles.mobileNavItem}>
+                    <button
+                      className={styles.mobileLogoutBtn}
+                      onClick={() => {
+                        handleLogout()
+                        closeMobileMenu()
+                      }}
+                    >
+                      <LogOut size={16} />
+                      <span>Logout</span>
+                    </button>
+                  </li>
+                </>
+              ) : (
+                <li className={styles.mobileNavItem}>
+                  <Link to="/login" className={styles.mobileLoginBtn} onClick={closeMobileMenu}>
+                    <User size={16} />
+                    <span>Login / Register</span>
+                  </Link>
+                </li>
+              )}
+            </ul>
+
+            <div className={styles.mobileCurrencySelector}>
+              <CurrencySelector />
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   )
 }
