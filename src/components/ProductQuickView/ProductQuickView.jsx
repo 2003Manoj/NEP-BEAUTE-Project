@@ -9,6 +9,8 @@ import styles from "./ProductQuickView.module.css"
 
 
 const ProductQuickView = ({ product, onClose }) => {
+  console.log("Rendering ProductQuickView with product:", product)
+
   const [quantity, setQuantity] = useState(1)
   const [activeImage, setActiveImage] = useState(0)
   const { addToCart } = useCart()
@@ -16,6 +18,8 @@ const ProductQuickView = ({ product, onClose }) => {
 
   // Generate additional images by adding query parameters to the original URL
   const generateAdditionalImages = (originalUrl) => {
+    if (!originalUrl) return ["/placeholder.svg", "/placeholder.svg", "/placeholder.svg"]
+
     // Extract base URL and query parameters
     const [baseUrl, queryParams] = originalUrl.split("?")
 
@@ -28,7 +32,7 @@ const ProductQuickView = ({ product, onClose }) => {
   }
 
   // Use the product's actual image and generate variations
-  const productImages = generateAdditionalImages(product.image)
+  const productImages = generateAdditionalImages(product?.image)
 
   useEffect(() => {
     // Prevent body scroll when modal is open
@@ -72,12 +76,26 @@ const ProductQuickView = ({ product, onClose }) => {
   }
 
   // Calculate discount percentage
-  const discountPercentage = product.originalPrice
+  const discountPercentage = product?.originalPrice
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
     : 0
 
+  // Safety check - if product is undefined, return null
+  if (!product) {
+    console.error("ProductQuickView received undefined product")
+    return null
+  }
+
   return (
-    <div className={styles.overlay} onClick={onClose}>
+    <div
+      className={styles.overlay}
+      onClick={(e) => {
+        // Only close if clicking directly on the overlay, not its children
+        if (e.target === e.currentTarget) {
+          onClose()
+        }
+      }}
+    >
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <button className={styles.closeButton} onClick={onClose} aria-label="Close">
           <X size={20} />

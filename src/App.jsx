@@ -1,7 +1,9 @@
-"use client"
-
-import { useState, useEffect } from "react"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import { AuthProvider } from "./contexts/AuthContext"
+import { CartProvider } from "./contexts/CartContext"
+import { WishlistProvider } from "./contexts/WishlistContext"
+import { CompareProvider } from "./contexts/CompareContext"
+import { RecentlyViewedProvider } from "./contexts/RecentlyViewedContext"
 import Header from "./components/Header/Header"
 import Footer from "./components/Footer/Footer"
 import HomePage from "./pages/HomePage/HomePage"
@@ -11,46 +13,23 @@ import CartPage from "./pages/CartPage/CartPage"
 import CheckoutPage from "./pages/CheckoutPage/CheckoutPage"
 import LoginPage from "./pages/LoginPage/LoginPage"
 import RegisterPage from "./pages/RegisterPage/RegisterPage"
-import ProfilePage from "./pages/ProfilePage/ProfilePage"
-import OrdersPage from "./pages/OrdersPage/OrdersPage"
 import WishlistPage from "./pages/WishlistPage/WishlistPage"
 import ComparePage from "./pages/ComparePage/ComparePage"
+import ProfilePage from "./pages/ProfilePage/ProfilePage"
+import OrdersPage from "./pages/OrdersPage/OrdersPage"
 import CompareBar from "./components/CompareBar/CompareBar"
-import { CartProvider } from "./contexts/CartContext"
-import { AuthProvider } from "./contexts/AuthContext"
-
-import { WishlistProvider } from "./contexts/WishlistContext"
-import { CompareProvider } from "./contexts/CompareContext"
-import { RecentlyViewedProvider } from "./contexts/RecentlyViewedContext"
+import QuickViewPage from "./pages/QuickViewPage/QuickViewPage"
 import "./App.css"
 
 function App() {
-  const [isLoading, setIsLoading] = useState(true)
-
-  useEffect(() => {
-    // Simulate initial data loading
-    setTimeout(() => {
-      setIsLoading(false)
-    }, 1500)
-  }, [])
-
-  if (isLoading) {
-    return (
-      <div className="loading-screen">
-        <div className="loading-logo">NepBeaute</div>
-        <div className="loading-spinner"></div>
-      </div>
-    )
-  }
-
   return (
     <Router>
       <AuthProvider>
         <CartProvider>
           <WishlistProvider>
-            
-              <CompareProvider>
-                <RecentlyViewedProvider>
+            <CompareProvider>
+              <RecentlyViewedProvider>
+                
                   <div className="app">
                     <Header />
                     <main className="main-content">
@@ -63,18 +42,19 @@ function App() {
                         <Route path="/checkout" element={<CheckoutPage />} />
                         <Route path="/login" element={<LoginPage />} />
                         <Route path="/register" element={<RegisterPage />} />
-                        <Route path="/profile" element={<ProfilePage />} />
-                        <Route path="/orders" element={<OrdersPage />} />
                         <Route path="/wishlist" element={<WishlistPage />} />
                         <Route path="/compare" element={<ComparePage />} />
+                        <Route path="/profile" element={<ProfilePage />} />
+                        <Route path="/orders" element={<OrdersPage />} />
+                        <Route path="/quick-view" element={<QuickViewPage />} />
                       </Routes>
                     </main>
-                    <Footer />
                     <CompareBar />
+                    <Footer />
                   </div>
-                </RecentlyViewedProvider>
-              </CompareProvider>
-            
+                
+              </RecentlyViewedProvider>
+            </CompareProvider>
           </WishlistProvider>
         </CartProvider>
       </AuthProvider>

@@ -247,6 +247,7 @@ const ProductsPage = () => {
 
   const openQuickView = (product) => {
     setQuickViewProduct(product)
+    console.log("Setting quickViewProduct to:", product)
   }
 
   const closeQuickView = () => {
@@ -497,12 +498,7 @@ const ProductsPage = () => {
             ) : (
               <div className={`${styles.productsWrapper} ${styles[viewMode]}`}>
                 {filteredProducts.map((product) => (
-                  <ProductCard
-                    key={product.id}
-                    product={product}
-                    horizontal={viewMode === "list"}
-                    openQuickView={() => openQuickView(product)}
-                  />
+                  <ProductCard key={product.id} product={product} horizontal={viewMode === "list"} />
                 ))}
               </div>
             )}

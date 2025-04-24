@@ -3,20 +3,8 @@
 import { useState, useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import ProductCard from "../../components/ProductCard/ProductCard"
-import ProductQuickView from "../../components/ProductQuickView/ProductQuickView"
 import { getProducts } from "../../services/productService"
-import {
-  ChevronRight,
-  Star,
-  TrendingUp,
-  Award,
-  ShoppingBag,
-  Clock,
-  Facebook,
-  Twitter,
-  Instagram,
-  Youtube,
-} from "lucide-react"
+import { ChevronRight, Star, TrendingUp, Award, Clock, Facebook, Twitter, Instagram, Youtube, Eye } from "lucide-react"
 import styles from "./HomePage.module.css"
 
 const HomePage = () => {
@@ -26,34 +14,33 @@ const HomePage = () => {
   const [trendingProducts, setTrendingProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [activeCategory, setActiveCategory] = useState("all")
-  const [quickViewProduct, setQuickViewProduct] = useState(null)
   const navigate = useNavigate()
 
   // Featured brands with updated logos
   const featuredBrands = [
     {
       name: "Himalaya",
-      logo: "https://images.unsplash.com/photo-1612817288484-6f916006741a?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80",
+      logo: "https://images.pexels.com/photos/3737586/pexels-photo-3737586.jpeg?auto=compress&cs=tinysrgb&w=600",
     },
     {
       name: "Lakme",
-      logo: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80",
+      logo: "https://images.pexels.com/photos/2253833/pexels-photo-2253833.jpeg?auto=compress&cs=tinysrgb&w=600",
     },
     {
       name: "Maybelline",
-      logo: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80",
+      logo: "https://images.pexels.com/photos/2688991/pexels-photo-2688991.jpeg?auto=compress&cs=tinysrgb&w=600",
     },
     {
       name: "Lotus",
-      logo: "https://images.unsplash.com/photo-1598452963314-b09f397a5c48?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80",
+      logo: "https://images.pexels.com/photos/3737600/pexels-photo-3737600.jpeg?auto=compress&cs=tinysrgb&w=600",
     },
     {
       name: "Forest Essentials",
-      logo: "https://images.unsplash.com/photo-1571781926291-c477ebfd024b?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80",
+      logo: "https://images.pexels.com/photos/6621333/pexels-photo-6621333.jpeg?auto=compress&cs=tinysrgb&w=600",
     },
     {
       name: "Biotique",
-      logo: "https://images.unsplash.com/photo-1526947425960-945c6e72858f?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80",
+      logo: "https://images.pexels.com/photos/6621462/pexels-photo-6621462.jpeg?auto=compress&cs=tinysrgb&w=600",
     },
   ]
 
@@ -83,12 +70,12 @@ const HomePage = () => {
     return products.filter((product) => product.category === activeCategory)
   }
 
-  const openQuickView = (product) => {
-    setQuickViewProduct(product)
-  }
+  const handleQuickView = (product) => {
+    // Store the product in localStorage for quick view
+    localStorage.setItem("quickViewProduct", JSON.stringify(product))
 
-  const closeQuickView = () => {
-    setQuickViewProduct(null)
+    // Open quick view in a new window
+    window.open("/quick-view", "_blank", "width=1000,height=800")
   }
 
   const handleBrandClick = (brandName) => {
@@ -157,7 +144,7 @@ const HomePage = () => {
             <Link to="/products/skincare" className={styles.categoryCard}>
               <div className={styles.categoryImage}>
                 <img
-                  src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                  src="https://images.pexels.com/photos/3737586/pexels-photo-3737586.jpeg?auto=compress&cs=tinysrgb&w=600"
                   alt="Skincare"
                 />
               </div>
@@ -172,7 +159,7 @@ const HomePage = () => {
             <Link to="/products/makeup" className={styles.categoryCard}>
               <div className={styles.categoryImage}>
                 <img
-                  src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                  src="https://images.pexels.com/photos/2253833/pexels-photo-2253833.jpeg?auto=compress&cs=tinysrgb&w=600"
                   alt="Makeup"
                 />
               </div>
@@ -187,7 +174,7 @@ const HomePage = () => {
             <Link to="/products/haircare" className={styles.categoryCard}>
               <div className={styles.categoryImage}>
                 <img
-                  src="https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                  src="https://images.pexels.com/photos/3997989/pexels-photo-3997989.jpeg?auto=compress&cs=tinysrgb&w=600"
                   alt="Haircare"
                 />
               </div>
@@ -202,7 +189,7 @@ const HomePage = () => {
             <Link to="/products/fragrance" className={styles.categoryCard}>
               <div className={styles.categoryImage}>
                 <img
-                  src="https://images.unsplash.com/photo-1594035910387-fea47794261f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                  src="https://images.pexels.com/photos/965989/pexels-photo-965989.jpeg?auto=compress&cs=tinysrgb&w=600"
                   alt="Fragrance"
                 />
               </div>
@@ -260,8 +247,15 @@ const HomePage = () => {
                       )}
                     </div>
                     <div className={styles.trendingActions}>
-                      <button className={styles.trendingCartBtn} onClick={() => openQuickView(product)}>
-                        <ShoppingBag size={16} />
+                      <button
+                        className={styles.trendingCartBtn}
+                        onClick={(e) => {
+                          e.preventDefault()
+                          e.stopPropagation()
+                          handleQuickView(product)
+                        }}
+                      >
+                        <Eye size={16} />
                         <span>Quick View</span>
                       </button>
                     </div>
@@ -364,7 +358,7 @@ const HomePage = () => {
             <div className={styles.adviceCard}>
               <div className={styles.adviceImage}>
                 <img
-                  src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                  src="https://images.pexels.com/photos/3737586/pexels-photo-3737586.jpeg?auto=compress&cs=tinysrgb&w=600"
                   alt="Skincare Routine"
                 />
               </div>
@@ -386,7 +380,7 @@ const HomePage = () => {
             <div className={styles.adviceCard}>
               <div className={styles.adviceImage}>
                 <img
-                  src="https://images.unsplash.com/photo-1599733589046-d8a84c8ff9d9?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                  src="https://images.pexels.com/photos/2253833/pexels-photo-2253833.jpeg?auto=compress&cs=tinysrgb&w=600"
                   alt="Makeup Tips"
                 />
               </div>
@@ -409,7 +403,7 @@ const HomePage = () => {
             <div className={styles.adviceCard}>
               <div className={styles.adviceImage}>
                 <img
-                  src="https://images.unsplash.com/photo-1560869713-7d0a29430803?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                  src="https://images.pexels.com/photos/3997989/pexels-photo-3997989.jpeg?auto=compress&cs=tinysrgb&w=600"
                   alt="Hair Care"
                 />
               </div>
@@ -530,9 +524,6 @@ const HomePage = () => {
           </div>
         </div>
       </section>
-
-      {/* Quick View Modal */}
-      {quickViewProduct && <ProductQuickView product={quickViewProduct} onClose={closeQuickView} />}
     </div>
   )
 }
