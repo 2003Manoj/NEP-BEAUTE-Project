@@ -18,13 +18,21 @@ export const CartProvider = ({ children }) => {
     return user ? `cart_${user.id}` : "cart_anonymous"
   }
 
+  // Calculate total price
+  const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
+
   useEffect(() => {
     // Load cart items from localStorage based on user status
     const loadCartItems = () => {
       const cartKey = getCartKey()
       const storedCart = localStorage.getItem(cartKey)
       if (storedCart) {
-        setCartItems(JSON.parse(storedCart))
+        try {
+          setCartItems(JSON.parse(storedCart))
+        } catch (error) {
+          console.error("Error parsing cart from localStorage:", error)
+          setCartItems([])
+        }
       }
     }
 
@@ -38,6 +46,8 @@ export const CartProvider = ({ children }) => {
   }, [cartItems, user])
 
   const addToCart = (product, quantity = 1) => {
+    console.log("Adding to cart:", product, "quantity:", quantity)
+
     setCartItems((prevItems) => {
       const existingItem = prevItems.find((item) => item.id === product.id)
 
@@ -49,6 +59,10 @@ export const CartProvider = ({ children }) => {
         return [...prevItems, { ...product, quantity }]
       }
     })
+
+    // Remove the alert
+    // alert(`${product.name} added to cart!`)
+    return true
   }
 
   const removeFromCart = (productId) => {
@@ -109,6 +123,7 @@ export const CartProvider = ({ children }) => {
     updateQuantity,
     clearCart,
     mergeAnonymousCart,
+    totalPrice,
   }
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>

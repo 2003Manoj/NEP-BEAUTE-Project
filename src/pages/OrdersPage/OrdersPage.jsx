@@ -1,9 +1,9 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { useAuth } from "../../contexts/AuthContext"
-import { X } from "lucide-react"
+import { X, Loader } from "lucide-react"
 import styles from "./OrdersPage.module.css"
 
 const OrdersPage = () => {
@@ -12,154 +12,45 @@ const OrdersPage = () => {
   const [activeTab, setActiveTab] = useState("all")
   const [selectedOrder, setSelectedOrder] = useState(null)
   const [showOrderDetails, setShowOrderDetails] = useState(false)
+  const [orders, setOrders] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
-  // Mock orders data
-  const orders = [
-    {
-      id: "ORD123456",
-      date: "2023-06-15",
-      status: "Delivered",
-      total: 2500,
-      items: [
-        {
-          id: 1,
-          name: "Himalayan Face Wash",
-          quantity: 1,
-          price: 850,
-          image:
-            "https://images.unsplash.com/photo-1556228578-8c89e6adf883?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-        },
-        {
-          id: 2,
-          name: "Aloe Vera Gel",
-          quantity: 2,
-          price: 825,
-          image:
-            "https://images.unsplash.com/photo-1597931752949-98c74b5b159a?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-        },
-      ],
-      shippingAddress: {
-        name: "John Doe",
-        street: "123 Main Street",
-        city: "Kathmandu",
-        state: "Bagmati",
-        zip: "44600",
-        country: "Nepal",
-        phone: "+977 9812345678",
-      },
-      paymentMethod: "Cash on Delivery",
-      deliveryDate: "2023-06-20",
-      trackingNumber: "NB-TRK-987654",
-    },
-    {
-      id: "ORD123457",
-      date: "2023-05-28",
-      status: "Processing",
-      total: 1750,
-      items: [
-        {
-          id: 3,
-          name: "Rose Water Toner",
-          quantity: 1,
-          price: 650,
-          image:
-            "https://images.unsplash.com/photo-1601049541289-9b1b7bbbfe19?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-        },
-        {
-          id: 4,
-          name: "Kumkumadi Face Oil",
-          quantity: 1,
-          price: 1100,
-          image:
-            "https://images.unsplash.com/photo-1608248597279-f99d160bfcbc?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-        },
-      ],
-      shippingAddress: {
-        name: "John Doe",
-        street: "123 Main Street",
-        city: "Kathmandu",
-        state: "Bagmati",
-        zip: "44600",
-        country: "Nepal",
-        phone: "+977 9812345678",
-      },
-      paymentMethod: "Credit Card",
-      estimatedDelivery: "2023-06-05",
-      trackingNumber: "NB-TRK-123456",
-    },
-    {
-      id: "ORD123458",
-      date: "2023-04-10",
-      status: "Delivered",
-      total: 3200,
-      items: [
-        {
-          id: 5,
-          name: "Sandalwood Face Pack",
-          quantity: 1,
-          price: 950,
-          image:
-            "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-        },
-        {
-          id: 6,
-          name: "Hair Oil",
-          quantity: 1,
-          price: 750,
-          image:
-            "https://images.unsplash.com/photo-1526947425960-945c6e72858f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-        },
-        {
-          id: 7,
-          name: "Kajal",
-          quantity: 2,
-          price: 750,
-          image:
-            "https://images.unsplash.com/photo-1631730359585-38a4935cbec4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-        },
-      ],
-      shippingAddress: {
-        name: "John Doe",
-        street: "123 Main Street",
-        city: "Kathmandu",
-        state: "Bagmati",
-        zip: "44600",
-        country: "Nepal",
-        phone: "+977 9812345678",
-      },
-      paymentMethod: "Cash on Delivery",
-      deliveryDate: "2023-04-15",
-      trackingNumber: "NB-TRK-456789",
-    },
-    {
-      id: "ORD123459",
-      date: "2023-03-05",
-      status: "Cancelled",
-      total: 1200,
-      items: [
-        {
-          id: 8,
-          name: "Lip Balm",
-          quantity: 2,
-          price: 600,
-          image:
-            "https://images.unsplash.com/photo-1625772299848-391b6a87d7b3?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-        },
-      ],
-      shippingAddress: {
-        name: "John Doe",
-        street: "123 Main Street",
-        city: "Kathmandu",
-        state: "Bagmati",
-        zip: "44600",
-        country: "Nepal",
-        phone: "+977 9812345678",
-      },
-      paymentMethod: "Credit Card",
-      cancellationReason: "Changed my mind",
-      cancellationDate: "2023-03-06",
-    },
-  ]
+  useEffect(() => {
+    if (!user) {
+      navigate("/login")
+      return
+    }
+
+    // Fetch user orders
+    const fetchOrders = async () => {
+      setLoading(true)
+      try {
+        // Get orders from localStorage
+        const userOrdersJSON = localStorage.getItem(`orders-${user.id}`)
+        console.log("User orders from localStorage:", userOrdersJSON)
+
+        if (userOrdersJSON) {
+          const userOrders = JSON.parse(userOrdersJSON)
+          console.log("Parsed user orders:", userOrders)
+          setOrders(userOrders)
+        } else {
+          // If no orders exist yet, create an empty array
+          console.log("No orders found for user:", user.id)
+          setOrders([])
+        }
+
+        setError(null)
+      } catch (err) {
+        console.error("Error fetching orders:", err)
+        setError("Failed to load your orders. Please try again later.")
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchOrders()
+  }, [user, navigate])
 
   const filteredOrders =
     activeTab === "all"
@@ -172,7 +63,6 @@ const OrdersPage = () => {
         })
 
   if (!user) {
-    navigate("/login")
     return null
   }
 
@@ -184,6 +74,54 @@ const OrdersPage = () => {
   const closeOrderDetails = () => {
     setShowOrderDetails(false)
     setSelectedOrder(null)
+  }
+
+  const handleCancelOrder = async (orderId) => {
+    try {
+      setLoading(true)
+
+      // In a real app, this would be an API call
+      // Example: await fetch(`/api/orders/${orderId}/cancel`, { method: 'PUT' })
+
+      // For now, we'll update the order in our local state
+      const updatedOrders = orders.map((order) =>
+        order.id === orderId
+          ? {
+              ...order,
+              status: "Cancelled",
+              cancellationDate: new Date().toISOString().split("T")[0],
+              cancellationReason: "Cancelled by customer",
+            }
+          : order,
+      )
+
+      setOrders(updatedOrders)
+
+      // Update in localStorage
+      localStorage.setItem(`orders-${user.id}`, JSON.stringify(updatedOrders))
+
+      // If we're viewing the details of the cancelled order, update it
+      if (selectedOrder && selectedOrder.id === orderId) {
+        setSelectedOrder({
+          ...selectedOrder,
+          status: "Cancelled",
+          cancellationDate: new Date().toISOString().split("T")[0],
+          cancellationReason: "Cancelled by customer",
+        })
+      }
+
+      alert("Order cancelled successfully")
+    } catch (err) {
+      console.error("Error cancelling order:", err)
+      alert("Failed to cancel order. Please try again.")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleWriteReview = (orderId, productId) => {
+    // Navigate to review form with order and product info
+    navigate(`/review?orderId=${orderId}&productId=${productId}`)
   }
 
   return (
@@ -218,10 +156,41 @@ const OrdersPage = () => {
           </button>
         </div>
 
-        {filteredOrders.length === 0 ? (
+        {loading ? (
+          <div className={styles.loadingState}>
+            <Loader className={styles.spinner} />
+            <p>Loading your orders...</p>
+          </div>
+        ) : error ? (
+          <div className={styles.errorState}>
+            <p>{error}</p>
+            <button className={styles.retryButton} onClick={() => window.location.reload()}>
+              Retry
+            </button>
+          </div>
+        ) : filteredOrders.length === 0 ? (
           <div className={styles.emptyState}>
-            <i className="fas fa-shopping-bag"></i>
-            <p>No orders found in this category.</p>
+            <div className={styles.emptyStateIcon}>
+              <svg
+                width="64"
+                height="64"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <path d="M16 10a4 4 0 0 1-8 0"></path>
+              </svg>
+            </div>
+            <p className={styles.emptyStateText}>
+              {activeTab === "all"
+                ? "You haven't placed any orders yet."
+                : `You don't have any ${activeTab.toLowerCase()} orders.`}
+            </p>
             <Link to="/products" className={styles.shopNowBtn}>
               Shop Now
             </Link>
@@ -254,7 +223,7 @@ const OrdersPage = () => {
                   {order.items.map((item) => (
                     <div key={item.id} className={styles.orderItem}>
                       <div className={styles.itemImage}>
-                        <img src={item.image || "/placeholder.svg"} alt={item.name} />
+                        <img src={item.image || "/placeholder.svg?height=80&width=80"} alt={item.name} />
                       </div>
                       <div className={styles.itemInfo}>
                         <h4>{item.name}</h4>
@@ -278,8 +247,23 @@ const OrdersPage = () => {
                     <button className={styles.viewDetailsBtn} onClick={() => handleViewDetails(order)}>
                       View Order Details
                     </button>
-                    {order.status === "Delivered" && <button className={styles.writeReviewBtn}>Write a Review</button>}
-                    {order.status === "Processing" && <button className={styles.cancelOrderBtn}>Cancel Order</button>}
+                    {order.status === "Delivered" && (
+                      <button
+                        className={styles.writeReviewBtn}
+                        onClick={() => handleWriteReview(order.id, order.items[0].id)}
+                      >
+                        Write a Review
+                      </button>
+                    )}
+                    {order.status === "Processing" && (
+                      <button
+                        className={styles.cancelOrderBtn}
+                        onClick={() => handleCancelOrder(order.id)}
+                        disabled={loading}
+                      >
+                        {loading ? "Cancelling..." : "Cancel Order"}
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
@@ -353,6 +337,12 @@ const OrdersPage = () => {
                       <span className={styles.detailValue}>{selectedOrder.cancellationReason}</span>
                     </div>
                   )}
+                  {selectedOrder.cancellationDate && (
+                    <div className={styles.orderDetailItem}>
+                      <span className={styles.detailLabel}>Cancelled On:</span>
+                      <span className={styles.detailValue}>{selectedOrder.cancellationDate}</span>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -383,7 +373,7 @@ const OrdersPage = () => {
                     <div key={item.id} className={styles.orderItemRow}>
                       <div className={styles.itemCol}>
                         <div className={styles.itemDetail}>
-                          <img src={item.image || "/placeholder.svg"} alt={item.name} />
+                          <img src={item.image || "/placeholder.svg?height=50&width=50"} alt={item.name} />
                           <span>{item.name}</span>
                         </div>
                       </div>
@@ -412,9 +402,28 @@ const OrdersPage = () => {
             </div>
 
             <div className={styles.orderDetailsFooter}>
-              {selectedOrder.status === "Processing" && <button className={styles.cancelOrderBtn}>Cancel Order</button>}
+              {selectedOrder.status === "Processing" && (
+                <button
+                  className={styles.cancelOrderBtn}
+                  onClick={() => {
+                    handleCancelOrder(selectedOrder.id)
+                    closeOrderDetails()
+                  }}
+                  disabled={loading}
+                >
+                  {loading ? "Cancelling..." : "Cancel Order"}
+                </button>
+              )}
               {selectedOrder.status === "Delivered" && (
-                <button className={styles.writeReviewBtn}>Write a Review</button>
+                <button
+                  className={styles.writeReviewBtn}
+                  onClick={() => {
+                    handleWriteReview(selectedOrder.id, selectedOrder.items[0].id)
+                    closeOrderDetails()
+                  }}
+                >
+                  Write a Review
+                </button>
               )}
               <button className={styles.closeBtn} onClick={closeOrderDetails}>
                 Close

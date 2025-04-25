@@ -1,73 +1,77 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect } from "react"
 import styles from "./PriceRangeSlider.module.css"
 
-const PriceRangeSlider = ({ minPrice, maxPrice, initialMin, initialMax, onChange, step = 100 }) => {
-  const [minValue, setMinValue] = useState(initialMin)
-  const [maxValue, setMaxValue] = useState(initialMax)
-  const [isDragging, setIsDragging] = useState(null)
+const PriceRangeSlider = ({ minPrice, maxPrice, onChange }) => {
+  const [minValue, setMinValue] = useState(minPrice)
+  const [maxValue, setMaxValue] = useState(maxPrice)
+  const [isDragging, setIsDragging] = useState(false)
 
-  const rangeRef = useRef(null)
-  const minThumbRef = useRef(null)
-  const maxThumbRef = useRef(null)
-  const rangeLineRef = useRef(null)
-
-  // Calculate the percentage for positioning
-  const getPercent = (value) => {
-    return Math.round(((value - minPrice) / (maxPrice - minPrice)) * 100)
-  }
-
-  // Update range line position
+  // Update local state when props change
   useEffect(() => {
-    if (rangeLineRef.current) {
-      const minPercent = getPercent(minValue)
-      const maxPercent = getPercent(maxValue)
+    setMinValue(minPrice)
+    setMaxValue(maxPrice)
+  }, [minPrice, maxPrice])
 
-      rangeLineRef.current.style.left = `${minPercent}%`
-      rangeLineRef.current.style.width = `${maxPercent - minPercent}%`
-    }
-  }, [minValue, maxValue, minPrice, maxPrice])
-
-  // Handle min value change
   const handleMinChange = (e) => {
-    const value = Math.min(Number(e.target.value), maxValue - step)
+    const value = Math.min(Number(e.target.value), maxValue - 100)
     setMinValue(value)
     onChange([value, maxValue])
   }
 
-  // Handle max value change
   const handleMaxChange = (e) => {
-    const value = Math.max(Number(e.target.value), minValue + step)
+    const value = Math.max(Number(e.target.value), minValue + 100)
     setMaxValue(value)
     onChange([minValue, value])
   }
 
-  // Format price for display
-  const formatPrice = (price) => {
-    return `Rs. ${price.toLocaleString()}`
+  const handleInputChange = (e, type) => {
+    const value = Number(e.target.value.replace(/\D/g, ""))
+
+    if (type === "min") {
+      const newMin = Math.max(minPrice, Math.min(value, maxValue - 100))
+      setMinValue(newMin)
+      onChange([newMin, maxValue])
+    } else {
+      const newMax = Math.min(maxPrice, Math.max(value, minValue + 100))
+      setMaxValue(newMax)
+      onChange([minValue, newMax])
+    }
   }
+
+  // Calculate percentages for slider positioning
+  const minPercent = ((minValue - minPrice) / (maxPrice - minPrice)) * 100
+  const maxPercent = ((maxValue - minPrice) / (maxPrice - minPrice)) * 100
 
   return (
     <div className={styles.priceRangeSlider}>
       <div className={styles.sliderValues}>
-        <div className={styles.minValue}>{formatPrice(minValue)}</div>
-        <div className={styles.maxValue}>{formatPrice(maxValue)}</div>
+        <span>Rs. {minPrice.toLocaleString()}</span>
+        <span>Rs. {maxPrice.toLocaleString()}</span>
       </div>
 
-      <div className={styles.sliderContainer} ref={rangeRef}>
+      <div className={styles.sliderContainer}>
         <div className={styles.sliderTrack}></div>
-        <div className={styles.sliderRange} ref={rangeLineRef}></div>
+        <div
+          className={styles.sliderRange}
+          style={{
+            left: `${minPercent}%`,
+            width: `${maxPercent - minPercent}%`,
+          }}
+        ></div>
 
         <input
           type="range"
           min={minPrice}
           max={maxPrice}
           value={minValue}
-          step={step}
           onChange={handleMinChange}
           className={`${styles.thumb} ${styles.thumbLeft}`}
-          ref={minThumbRef}
+          onMouseDown={() => setIsDragging(true)}
+          onMouseUp={() => setIsDragging(false)}
+          onTouchStart={() => setIsDragging(true)}
+          onTouchEnd={() => setIsDragging(false)}
         />
 
         <input
@@ -75,35 +79,35 @@ const PriceRangeSlider = ({ minPrice, maxPrice, initialMin, initialMax, onChange
           min={minPrice}
           max={maxPrice}
           value={maxValue}
-          step={step}
           onChange={handleMaxChange}
-          className={`${styles.thumb} ${styles.thumbRight}`}
-          ref={maxThumbRef}
+          className={styles.thumb}
+          onMouseDown={() => setIsDragging(true)}
+          onMouseUp={() => setIsDragging(false)}
+          onTouchStart={() => setIsDragging(true)}
+          onTouchEnd={() => setIsDragging(false)}
         />
       </div>
 
       <div className={styles.priceInputs}>
         <div className={styles.inputGroup}>
-          <label>Min</label>
+          <label>Min Price</label>
           <input
-            type="number"
-            value={minValue}
-            min={minPrice}
-            max={maxValue - step}
-            step={step}
-            onChange={handleMinChange}
+            type="text"
+            value={minValue.toLocaleString()}
+            onChange={(e) => handleInputChange(e, "min")}
+            onBlur={() => onChange(minValue, maxValue)}
           />
         </div>
-        <div className={styles.inputDivider}>-</div>
+
+        <span className={styles.inputDivider}>-</span>
+
         <div className={styles.inputGroup}>
-          <label>Max</label>
+          <label>Max Price</label>
           <input
-            type="number"
-            value={maxValue}
-            min={minValue + step}
-            max={maxPrice}
-            step={step}
-            onChange={handleMaxChange}
+            type="text"
+            value={maxValue.toLocaleString()}
+            onChange={(e) => handleInputChange(e, "max")}
+            onBlur={() => onChange(minValue, maxValue)}
           />
         </div>
       </div>

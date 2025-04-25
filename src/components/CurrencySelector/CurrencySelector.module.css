@@ -1,0 +1,93 @@
+.currencySelector {
+    position: relative;
+    font-size: 0.875rem;
+    z-index: 100;
+  }
+  
+  .selectorButton {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    background: transparent;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    padding: 0.35rem 0.5rem;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+  
+  .selectorButton:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+  
+  .icon {
+    transition: transform 0.2s ease;
+  }
+  
+  .rotated {
+    transform: rotate(180deg);
+  }
+  
+  .dropdown {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    width: 200px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    z-index: 100;
+    animation: slideDown 0.2s ease-out;
+  }
+  
+  .currencyOption {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    text-align: left;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .currencyOption:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+  
+  .currencyOption.selected {
+    background-color: rgba(0, 0, 0, 0.08);
+    font-weight: 600;
+  }
+  
+  .currencyCode {
+    font-weight: 600;
+  }
+  
+  .currencyName {
+    font-size: 0.75rem;
+    color: rgba(0, 0, 0, 0.6);
+  }
+  
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Responsive styles */
+  @media (max-width: 768px) {
+    .dropdown {
+      right: -50px;
+    }
+  }
+  

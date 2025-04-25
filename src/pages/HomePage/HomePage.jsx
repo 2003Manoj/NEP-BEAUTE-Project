@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import ProductCard from "../../components/ProductCard/ProductCard"
+import ProductQuickView from "../../components/ProductQuickView/ProductQuickView"
 import { getProducts } from "../../services/productService"
 import { ChevronRight, Star, TrendingUp, Award, Clock, Facebook, Twitter, Instagram, Youtube, Eye } from "lucide-react"
 import styles from "./HomePage.module.css"
@@ -14,6 +15,14 @@ const HomePage = () => {
   const [trendingProducts, setTrendingProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [activeCategory, setActiveCategory] = useState("all")
+  const [quickViewProduct, setQuickViewProduct] = useState(null)
+  const [showQuickView, setShowQuickView] = useState(false)
+  const [countdown, setCountdown] = useState({
+    days: 2,
+    hours: 18,
+    minutes: 45,
+    seconds: 0,
+  })
   const navigate = useNavigate()
 
   // Featured brands with updated logos
@@ -65,25 +74,83 @@ const HomePage = () => {
     fetchProducts()
   }, [])
 
+  // Countdown timer
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCountdown((prevCountdown) => {
+        let { days, hours, minutes, seconds } = prevCountdown
+
+        if (seconds > 0) {
+          seconds -= 1
+        } else {
+          seconds = 59
+          if (minutes > 0) {
+            minutes -= 1
+          } else {
+            minutes = 59
+            if (hours > 0) {
+              hours -= 1
+            } else {
+              hours = 23
+              if (days > 0) {
+                days -= 1
+              } else {
+                // Timer finished
+                clearInterval(timer)
+                return prevCountdown
+              }
+            }
+          }
+        }
+
+        return { days, hours, minutes, seconds }
+      })
+    }, 1000)
+
+    return () => clearInterval(timer)
+  }, [])
+
   const filterProductsByCategory = (products) => {
     if (activeCategory === "all") return products
     return products.filter((product) => product.category === activeCategory)
   }
 
   const handleQuickView = (product) => {
-    // Store the product in localStorage for quick view
-    localStorage.setItem("quickViewProduct", JSON.stringify(product))
+    console.log("Opening quick view for product:", product)
+    if (!product) {
+      console.error("Attempted to open quick view with undefined product")
+      return
+    }
+    setQuickViewProduct(product)
+    setShowQuickView(true)
+    // Prevent scrolling when modal is open
+    document.body.style.overflow = "hidden"
+  }
 
-    // Open quick view in a new window
-    window.open("/quick-view", "_blank", "width=1000,height=800")
+  const closeQuickView = () => {
+    console.log("Closing quick view")
+    setShowQuickView(false)
+    // Re-enable scrolling when modal is closed
+    document.body.style.overflow = "auto"
+    // Use setTimeout to avoid state update conflicts
+    setTimeout(() => {
+      setQuickViewProduct(null)
+    }, 300)
   }
 
   const handleBrandClick = (brandName) => {
     navigate(`/products?brand=${encodeURIComponent(brandName)}`)
   }
 
+  const handleProductClick = (product) => {
+    navigate(`/product/${product.id}`)
+  }
+
   return (
     <div className={styles.homePage}>
+      {/* Quick View Modal */}
+      {showQuickView && quickViewProduct && <ProductQuickView product={quickViewProduct} onClose={closeQuickView} />}
+
       {/* Hero Section */}
       <section className={styles.heroSection}>
         <div className={styles.heroContent}>
@@ -223,7 +290,7 @@ const HomePage = () => {
           ) : (
             <div className={styles.trendingGrid}>
               {trendingProducts.map((product) => (
-                <div key={product.id} className={styles.trendingProduct}>
+                <div key={product.id} className={styles.trendingProduct} onClick={() => handleProductClick(product)}>
                   <div className={styles.trendingRank}>
                     <span>{trendingProducts.indexOf(product) + 1}</span>
                   </div>
@@ -275,16 +342,20 @@ const HomePage = () => {
           <p>Get 20% off on all Himalayan Skincare products</p>
           <div className={styles.bannerTimer}>
             <div className={styles.timerUnit}>
-              <span className={styles.timerNumber}>2</span>
+              <span className={styles.timerNumber}>{countdown.days}</span>
               <span className={styles.timerLabel}>Days</span>
             </div>
             <div className={styles.timerUnit}>
-              <span className={styles.timerNumber}>18</span>
+              <span className={styles.timerNumber}>{countdown.hours.toString().padStart(2, "0")}</span>
               <span className={styles.timerLabel}>Hours</span>
             </div>
             <div className={styles.timerUnit}>
-              <span className={styles.timerNumber}>45</span>
+              <span className={styles.timerNumber}>{countdown.minutes.toString().padStart(2, "0")}</span>
               <span className={styles.timerLabel}>Minutes</span>
+            </div>
+            <div className={styles.timerUnit}>
+              <span className={styles.timerNumber}>{countdown.seconds.toString().padStart(2, "0")}</span>
+              <span className={styles.timerLabel}>Seconds</span>
             </div>
           </div>
           <Link to="/products?brand=Himalaya" className={styles.bannerBtn}>
@@ -334,7 +405,18 @@ const HomePage = () => {
           ) : (
             <div className={styles.productsGrid}>
               {filterProductsByCategory(newArrivals).map((product) => (
-                <ProductCard key={product.id} product={product} />
+                <div
+                  key={product.id}
+                  style={{ cursor: "pointer" }}
+                  onClick={(e) => {
+                    // Only navigate if not clicking on a button
+                    if (e.target.tagName !== "BUTTON" && !e.target.closest("button")) {
+                      handleProductClick(product)
+                    }
+                  }}
+                >
+                  <ProductCard product={product} onQuickView={handleQuickView} />
+                </div>
               ))}
             </div>
           )}

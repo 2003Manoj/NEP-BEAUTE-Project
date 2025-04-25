@@ -1,0 +1,102 @@
+.currencyDropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .dropdownToggle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: transparent;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+    font-size: 0.875rem;
+    color: #555;
+    transition: color 0.2s ease;
+  }
+  
+  .dropdownToggle:hover {
+    color: #000;
+  }
+  
+  .currentCurrency {
+    font-weight: 500;
+  }
+  
+  .dropdownToggle svg {
+    transition: transform 0.2s ease;
+  }
+  
+  .rotated {
+    transform: rotate(180deg);
+  }
+  
+  .dropdownMenu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    min-width: 220px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    padding: 0.5rem 0;
+    margin-top: 0.5rem;
+    animation: fadeIn 0.2s ease;
+  }
+  
+  .currencyOption {
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    text-align: left;
+    padding: 0.75rem 1rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+  
+  .currencyOption:hover {
+    background: rgba(0, 0, 0, 0.05);
+  }
+  
+  .currencyOption.active {
+    background: rgba(0, 0, 0, 0.08);
+    font-weight: 500;
+  }
+  
+  .currencySymbol {
+    font-weight: 600;
+  }
+  
+  .currencyCode {
+    font-weight: 500;
+  }
+  
+  .currencyName {
+    font-size: 0.75rem;
+    color: #777;
+    text-align: right;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .dropdownMenu {
+      right: -50px;
+    }
+  }
+  

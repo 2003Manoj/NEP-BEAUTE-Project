@@ -129,6 +129,15 @@ const ProfilePage = () => {
     navigate("/")
   }
 
+  // New navigation handlers
+  const navigateToOrders = () => {
+    navigate("/orders")
+  }
+
+  const navigateToWishlist = () => {
+    navigate("/wishlist")
+  }
+
   if (!user) {
     navigate("/login")
     return null
@@ -159,16 +168,16 @@ const ProfilePage = () => {
                 My Profile
               </button>
               <button
-                className={`${styles.navItem} ${activeTab === "orders" ? styles.active : ""}`}
-                onClick={() => setActiveTab("orders")}
+                className={`${styles.navItem}`}
+                onClick={navigateToOrders}
               >
                 <ShoppingBag size={18} />
                 My Orders
                 <span className={styles.badge}>{orders.length}</span>
               </button>
               <button
-                className={`${styles.navItem} ${activeTab === "wishlist" ? styles.active : ""}`}
-                onClick={() => setActiveTab("wishlist")}
+                className={`${styles.navItem}`}
+                onClick={navigateToWishlist}
               >
                 <Heart size={18} />
                 My Wishlist
@@ -345,118 +354,6 @@ const ProfilePage = () => {
                     </div>
                   </div>
                 </div>
-              </div>
-            )}
-
-            {activeTab === "orders" && (
-              <div className={styles.ordersTab}>
-                <div className={styles.sectionHeader}>
-                  <h2>My Orders</h2>
-                </div>
-
-                {orders.length === 0 ? (
-                  <div className={styles.emptyState}>
-                    <ShoppingBag size={48} />
-                    <p>You haven't placed any orders yet.</p>
-                    <Link to="/products" className={styles.shopNowBtn}>
-                      Shop Now
-                    </Link>
-                  </div>
-                ) : (
-                  <div className={styles.ordersList}>
-                    {orders.map((order) => (
-                      <div key={order.id} className={styles.orderCard}>
-                        <div className={styles.orderHeader}>
-                          <div>
-                            <h3>Order #{order.id}</h3>
-                            <p>Placed on {new Date(order.date).toLocaleDateString()}</p>
-                          </div>
-                          <div className={styles.orderStatus}>
-                            <span
-                              className={`${styles.statusBadge} ${
-                                order.status === "Delivered" ? styles.delivered : styles.processing
-                              }`}
-                            >
-                              {order.status === "Delivered" ? <Check size={14} /> : null}
-                              {order.status}
-                            </span>
-                          </div>
-                        </div>
-
-                        <div className={styles.orderItems}>
-                          {order.items.map((item) => (
-                            <div key={item.id} className={styles.orderItem}>
-                              <div className={styles.itemInfo}>
-                                <h4>{item.name}</h4>
-                                <p>
-                                  Qty: {item.quantity} x Rs. {item.price.toLocaleString()}
-                                </p>
-                              </div>
-                              <div className={styles.itemTotal}>
-                                Rs. {(item.quantity * item.price).toLocaleString()}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-
-                        <div className={styles.orderFooter}>
-                          <div className={styles.orderTotal}>
-                            <span>Total:</span>
-                            <span>Rs. {order.total.toLocaleString()}</span>
-                          </div>
-                          <div className={styles.orderActions}>
-                            <button className={styles.viewDetailsBtn}>View Details</button>
-                            {order.status === "Delivered" && (
-                              <button className={styles.writeReviewBtn}>Write a Review</button>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
-
-            {activeTab === "wishlist" && (
-              <div className={styles.wishlistTab}>
-                <div className={styles.sectionHeader}>
-                  <h2>My Wishlist</h2>
-                </div>
-
-                {wishlistItems.length === 0 ? (
-                  <div className={styles.emptyState}>
-                    <Heart size={48} />
-                    <p>Your wishlist is empty.</p>
-                    <Link to="/products" className={styles.shopNowBtn}>
-                      Explore Products
-                    </Link>
-                  </div>
-                ) : (
-                  <div className={styles.wishlistGrid}>
-                    {wishlistItems.map((item) => (
-                      <div key={item.id} className={styles.wishlistItem}>
-                        <button className={styles.removeWishlistBtn}>
-                          <X size={16} />
-                        </button>
-                        <div className={styles.wishlistItemImage}>
-                          <img
-                            src={
-                              item.image ||
-                              `https://images.unsplash.com/photo-1556227702-d1e4e7b5c232?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60`
-                            }
-                            alt={item.name}
-                          />
-                        </div>
-                        <div className={styles.wishlistItemInfo}>
-                          <h3>{item.name}</h3>
-                          <p>Rs. {item.price.toLocaleString()}</p>
-                          <button className={styles.addToCartBtn}>Add to Cart</button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
               </div>
             )}
 

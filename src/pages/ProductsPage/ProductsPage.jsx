@@ -7,7 +7,6 @@ import PriceRangeSlider from "../../components/PriceRangeSlider/PriceRangeSlider
 import { getProducts } from "../../services/productService"
 import { Filter, SlidersHorizontal, ChevronDown, X, Check, Grid, List, Star } from "lucide-react"
 import styles from "./ProductsPage.module.css"
-import ProductQuickView from "../../components/ProductQuickView/ProductQuickView"
 
 const ProductsPage = () => {
   const { category } = useParams()
@@ -20,7 +19,6 @@ const ProductsPage = () => {
   const [products, setProducts] = useState([])
   const [filteredProducts, setFilteredProducts] = useState([])
   const [loading, setLoading] = useState(true)
-  const [quickViewProduct, setQuickViewProduct] = useState(null)
   const [filters, setFilters] = useState({
     category: category || "all",
     priceRange: [0, 10000],
@@ -85,6 +83,15 @@ const ProductsPage = () => {
 
     fetchProducts()
   }, [])
+
+  // Add this new useEffect to handle category from query params
+  useEffect(() => {
+    // Get category from query params
+    const categoryParam = searchParams.get("category")
+    if (categoryParam) {
+      setFilters((prev) => ({ ...prev, category: categoryParam }))
+    }
+  }, [location.search])
 
   useEffect(() => {
     // Update category filter when URL param changes
@@ -243,15 +250,6 @@ const ProductsPage = () => {
     }
 
     return "All Products"
-  }
-
-  const openQuickView = (product) => {
-    setQuickViewProduct(product)
-    console.log("Setting quickViewProduct to:", product)
-  }
-
-  const closeQuickView = () => {
-    setQuickViewProduct(null)
   }
 
   return (
@@ -505,9 +503,6 @@ const ProductsPage = () => {
           </div>
         </div>
       </div>
-
-      {/* Quick View Modal */}
-      {quickViewProduct && <ProductQuickView product={quickViewProduct} onClose={closeQuickView} />}
     </div>
   )
 }

@@ -178,10 +178,7 @@ const CartPage = () => {
             <div className={styles.paymentMethods}>
               <p>We Accept:</p>
               <div className={styles.paymentIcons}>
-                <img
-                  src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Khalti_Digital_Wallet_Logo.png"
-                  alt="Khalti"
-                />
+                
                 <img src="https://esewa.com.np/common/images/esewa_logo.png" alt="eSewa" />
                 <img src="https://cdn-icons-png.flaticon.com/512/1554/1554401.png" alt="Cash on Delivery" />
               </div>

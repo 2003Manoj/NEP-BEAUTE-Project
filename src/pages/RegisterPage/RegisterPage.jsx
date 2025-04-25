@@ -1,8 +1,10 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { useAuth } from "../../contexts/AuthContext"
+import { ToastContainer, toast } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
 import styles from "./RegisterPage.module.css"
 
 const RegisterPage = () => {
@@ -21,6 +23,25 @@ const RegisterPage = () => {
 
   const [errors, setErrors] = useState({})
   const [isLoading, setIsLoading] = useState(false)
+
+  // Mock database for existing users
+  const [existingUsers, setExistingUsers] = useState([])
+
+  useEffect(() => {
+    // Simulate fetching existing users from localStorage
+    const storedUsers = localStorage.getItem("registeredUsers")
+    if (storedUsers) {
+      setExistingUsers(JSON.parse(storedUsers))
+    } else {
+      // Initialize with some mock data
+      const mockUsers = [
+        { email: "test@example.com", phone: "9876543210" },
+        { email: "user@nepbeaute.com", phone: "9812345678" },
+      ]
+      localStorage.setItem("registeredUsers", JSON.stringify(mockUsers))
+      setExistingUsers(mockUsers)
+    }
+  }, [])
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target
@@ -45,12 +66,18 @@ const RegisterPage = () => {
       newErrors.email = "Email is required"
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = "Email is invalid"
+    } else if (existingUsers.some((user) => user.email === formData.email)) {
+      newErrors.email = "Email is already registered"
+      toast.error("This email is already registered. Please use a different email or login.")
     }
 
     if (!formData.phone.trim()) {
       newErrors.phone = "Phone number is required"
     } else if (!/^9\d{9}$/.test(formData.phone)) {
       newErrors.phone = "Phone number should be 10 digits starting with 9"
+    } else if (existingUsers.some((user) => user.phone === formData.phone)) {
+      newErrors.phone = "Phone number is already registered"
+      toast.error("This phone number is already registered. Please use a different number or login.")
     }
 
     if (!formData.password) {
@@ -90,14 +117,24 @@ const RegisterPage = () => {
         phone: formData.phone,
       }
 
+      // Add user to "database"
+      const updatedUsers = [...existingUsers, { email: formData.email, phone: formData.phone }]
+      localStorage.setItem("registeredUsers", JSON.stringify(updatedUsers))
+
       register(userData)
       setIsLoading(false)
-      navigate("/")
+      toast.success("Registration successful! Redirecting to homepage...")
+
+      // Redirect after toast is shown
+      setTimeout(() => {
+        navigate("/")
+      }, 2000)
     }, 1500)
   }
 
   return (
     <div className={styles.registerPage}>
+      <ToastContainer position="top-right" autoClose={3000} />
       <div className={styles.container}>
         <div className={styles.registerContainer}>
           <div className={styles.registerImage}>

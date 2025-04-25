@@ -6,10 +6,16 @@ import { useCart } from "../../contexts/CartContext"
 import { useWishlist } from "../../contexts/WishlistContext"
 import { X, Heart, ShoppingBag, Star, ChevronLeft, ChevronRight } from "lucide-react"
 import styles from "./ProductQuickView.module.css"
-
+import PriceDisplay from "../PriceDisplay/PriceDisplay"
 
 const ProductQuickView = ({ product, onClose }) => {
   console.log("Rendering ProductQuickView with product:", product)
+
+  // Safety check - if product is undefined, return null
+  if (!product) {
+    console.error("ProductQuickView received undefined product")
+    return null
+  }
 
   const [quantity, setQuantity] = useState(1)
   const [activeImage, setActiveImage] = useState(0)
@@ -79,12 +85,6 @@ const ProductQuickView = ({ product, onClose }) => {
   const discountPercentage = product?.originalPrice
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
     : 0
-
-  // Safety check - if product is undefined, return null
-  if (!product) {
-    console.error("ProductQuickView received undefined product")
-    return null
-  }
 
   return (
     <div

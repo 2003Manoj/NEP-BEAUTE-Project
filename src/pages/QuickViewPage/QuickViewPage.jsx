@@ -1,31 +1,84 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useNavigate, useParams, useLocation } from "react-router-dom"
 import { useCart } from "../../contexts/CartContext"
 import { useWishlist } from "../../contexts/WishlistContext"
 import { X, Heart, ShoppingBag, Star, ChevronLeft, ChevronRight } from "lucide-react"
 import styles from "./QuickViewPage.module.css"
 
-
 const QuickViewPage = () => {
   const [product, setProduct] = useState(null)
   const [quantity, setQuantity] = useState(1)
   const [activeImage, setActiveImage] = useState(0)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
   const { addToCart } = useCart()
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist()
   const navigate = useNavigate()
+  const location = useLocation()
+  const params = useParams()
 
   useEffect(() => {
-    // Get product from localStorage
-    const storedProduct = localStorage.getItem("quickViewProduct")
-    if (storedProduct) {
-      setProduct(JSON.parse(storedProduct))
-    } else {
-      // If no product found, redirect to home
-      navigate("/")
+    const fetchProduct = async () => {
+      try {
+        setLoading(true)
+        
+        // Check if product was passed in location state (preferred approach)
+        if (location.state?.product) {
+          console.log("Product found in location state:", location.state.product)
+          setProduct(location.state.product)
+          return
+        }
+        
+        // If not in location state, try from localStorage
+        const storedProduct = localStorage.getItem("quickViewProduct")
+        if (storedProduct) {
+          console.log("Product found in localStorage")
+          setProduct(JSON.parse(storedProduct))
+          return
+        }
+        
+        // If product ID is in the URL, try to fetch it
+        if (params.id) {
+          console.log("Trying to fetch product by ID:", params.id)
+          // Mock fetch - replace with your actual fetch logic
+          const storedProducts = localStorage.getItem("products")
+          if (storedProducts) {
+            const allProducts = JSON.parse(storedProducts)
+            const foundProduct = allProducts.find(p => p.id === params.id)
+            if (foundProduct) {
+              setProduct(foundProduct)
+              return
+            }
+          }
+        }
+        
+        // If we get here, no product was found
+        setError("Product not found")
+        
+      } catch (err) {
+        console.error("Error loading product:", err)
+        setError("Error loading product data")
+      } finally {
+        setLoading(false)
+      }
     }
-  }, [navigate])
+
+    fetchProduct()
+  }, [location.state, params.id])
+
+  // Console log to debug
+  useEffect(() => {
+    console.log("QuickViewPage mounted")
+    console.log("Current product state:", product)
+    console.log("Loading state:", loading)
+    console.log("Error state:", error)
+    
+    return () => {
+      console.log("QuickViewPage unmounted")
+    }
+  }, [product, loading, error])
 
   // Generate additional images by adding query parameters to the original URL
   const generateAdditionalImages = (originalUrl) => {
@@ -47,8 +100,11 @@ const QuickViewPage = () => {
 
   const handleAddToCart = () => {
     if (product) {
-      addToCart(product, quantity)
-      window.close() // Close the quick view window
+      const success = addToCart(product, quantity)
+      console.log("Add to cart result:", success)
+
+      // Navigate back to previous page after adding to cart
+      navigate(-1)
     }
   }
 
@@ -58,7 +114,8 @@ const QuickViewPage = () => {
     if (isInWishlist(product.id)) {
       removeFromWishlist(product.id)
     } else {
-      addToWishlist(product)
+      const success = addToWishlist(product)
+      console.log("Add to wishlist result:", success)
     }
   }
 
@@ -81,23 +138,41 @@ const QuickViewPage = () => {
   }
 
   // Calculate discount percentage
-  const discountPercentage = product?.originalPrice
+  const discountPercentage = product?.originalPrice && product?.price
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
     : 0
 
-  // If product is not loaded yet, show loading
-  if (!product) {
+  console.log("Rendering QuickViewPage with product:", product)
+
+  // If loading, show loading spinner
+  if (loading) {
     return (
-      <div className={styles.loadingContainer}>
-        <div className={styles.loadingSpinner}></div>
-        <p>Loading product...</p>
+      <div className={styles.quickViewPage}>
+        <div className={styles.loadingContainer}>
+          <div className={styles.loadingSpinner}></div>
+          <p>Loading product...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // If error or no product, show error message
+  if (error || !product) {
+    return (
+      <div className={styles.quickViewPage}>
+        <div className={styles.errorContainer}>
+          <p>{error || "Product not found"}</p>
+          <button className={styles.backButton} onClick={() => navigate(-1)}>
+            Go Back
+          </button>
+        </div>
       </div>
     )
   }
 
   return (
-    <div className={styles.quickViewPage}>
-      <button className={styles.closeButton} onClick={() => window.close()} aria-label="Close">
+    <div className={styles.quickViewPage} style={{ margin: '20px auto', padding: '20px' }}>
+      <button className={styles.closeButton} onClick={() => navigate(-1)} aria-label="Close">
         <X size={20} />
       </button>
 
@@ -143,7 +218,10 @@ const QuickViewPage = () => {
           </div>
 
           <div className={styles.priceContainer}>
-            <PriceDisplay price={product.price} originalPrice={product.originalPrice} size="large" />
+            <span className={styles.price}>${product.price?.toFixed(2) || "0.00"}</span>
+            {product.originalPrice && (
+              <span className={styles.originalPrice}>${product.originalPrice.toFixed(2)}</span>
+            )}
           </div>
 
           <div className={styles.description}>
@@ -173,15 +251,18 @@ const QuickViewPage = () => {
             </button>
 
             <button
-              className={`${styles.wishlistBtn} ${isInWishlist(product.id) ? styles.active : ""}`}
+              className={`${styles.wishlistBtn} ${isInWishlist?.(product.id) ? styles.active : ""}`}
               onClick={handleWishlistToggle}
-              aria-label={isInWishlist(product.id) ? "Remove from wishlist" : "Add to wishlist"}
+              aria-label={isInWishlist?.(product.id) ? "Remove from wishlist" : "Add to wishlist"}
             >
-              <Heart size={18} fill={isInWishlist(product.id) ? "currentColor" : "none"} />
+              <Heart size={18} fill={isInWishlist?.(product.id) ? "currentColor" : "none"} />
             </button>
           </div>
 
-          <Link to={`/product/${product.id}`} className={styles.viewDetailsLink} onClick={() => window.close()}>
+          <Link
+            to={`/product/${product.id}`}
+            className={styles.viewDetailsLink}
+          >
             View Full Details
           </Link>
         </div>

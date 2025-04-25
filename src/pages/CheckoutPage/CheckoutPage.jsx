@@ -1,15 +1,27 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { useCart } from "../../contexts/CartContext"
 import { useAuth } from "../../contexts/AuthContext"
+import { ToastContainer, toast } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
 import styles from "./CheckoutPage.module.css"
+
+// Custom currency hook
+const useCurrency = () => {
+  const formatPrice = (price) => {
+    return `Rs. ${price.toLocaleString()}`;
+  };
+
+  return { formatPrice };
+};
 
 const CheckoutPage = () => {
   const { cartItems, totalPrice, clearCart } = useCart()
   const { user } = useAuth()
   const navigate = useNavigate()
+  const { formatPrice } = useCurrency()
 
   const [formData, setFormData] = useState({
     firstName: user?.firstName || "",
@@ -26,11 +38,25 @@ const CheckoutPage = () => {
 
   const [errors, setErrors] = useState({})
   const [orderPlaced, setOrderPlaced] = useState(false)
+  const [isProcessing, setIsProcessing] = useState(false)
+  const [pageLoaded, setPageLoaded] = useState(false)
 
-  // Calculate totals
-  const subtotal = totalPrice
-  const deliveryFee = subtotal > 2000 ? 0 : 100 // Free delivery for orders over Rs. 2000
+ 
+  const subtotal = totalPrice || 0
+  const deliveryFee = subtotal > 2000 ? 0 : 100 
   const total = subtotal + deliveryFee
+
+  useEffect(() => {
+  
+    const timer = setTimeout(() => {
+      setPageLoaded(true)
+      if (cartItems.length === 0 && !orderPlaced) {
+        navigate("/cart")
+      }
+    }, 100)
+    
+    return () => clearTimeout(timer)
+  }, [cartItems, orderPlaced, navigate])
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target
@@ -39,7 +65,7 @@ const CheckoutPage = () => {
       [name]: type === "checkbox" ? checked : value,
     }))
 
-    // Clear error when field is edited
+
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }))
     }
@@ -68,6 +94,61 @@ const CheckoutPage = () => {
     return Object.keys(newErrors).length === 0
   }
 
+  const saveOrderToLocalStorage = () => {
+    if (!user) return;
+    
+    
+    const orderId = "ORD" + Math.floor(100000 + Math.random() * 900000);
+    
+  
+    const newOrder = {
+      id: orderId,
+      date: new Date().toISOString(),
+      status: "Processing",
+      total: total,
+      items: cartItems.map(item => ({
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+        image: item.image
+      })),
+      paymentMethod: formData.paymentMethod === "cod" ? "Cash on Delivery" : 
+                     formData.paymentMethod === "khalti" ? "Khalti" : "eSewa",
+      shippingAddress: {
+        name: `${formData.firstName} ${formData.lastName}`,
+        street: `${formData.address}, ${formData.area}`,
+        city: formData.city,
+        state: "Bagmati",
+        zip: formData.zipCode || "44600",
+        country: "Nepal",
+        phone: formData.phone
+      },
+      estimatedDelivery: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString()
+    };
+    
+  
+    let orders = [];
+    const existingOrders = localStorage.getItem(`orders-${user.id}`);
+    
+    if (existingOrders) {
+      try {
+        orders = JSON.parse(existingOrders);
+      } catch (error) {
+        console.error("Error parsing existing orders:", error);
+        orders = [];
+      }
+    }
+    
+   
+    orders.unshift(newOrder);
+    
+    
+    localStorage.setItem(`orders-${user.id}`, JSON.stringify(orders));
+    
+    return orderId;
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault()
 
@@ -75,26 +156,40 @@ const CheckoutPage = () => {
       return
     }
 
-    // Simulate order placement
+    setIsProcessing(true)
+    toast.info("Processing your order...")
+
+    
+    const orderId = saveOrderToLocalStorage();
+
+    
     setTimeout(() => {
       setOrderPlaced(true)
       clearCart()
+      toast.success(`Order #${orderId} placed successfully!`)
 
-      // Redirect to success page after a delay
+   
       setTimeout(() => {
-        navigate("/")
+        navigate("/profile")
       }, 3000)
-    }, 1500)
+    }, 2000)
   }
 
-  if (cartItems.length === 0 && !orderPlaced) {
-    navigate("/cart")
-    return null
+ 
+  if (!pageLoaded) {
+    return (
+      <div className={styles.loadingContainer}>
+        <div className={styles.loadingSpinner}></div>
+        <p>Loading checkout...</p>
+      </div>
+    )
   }
 
+  
   if (orderPlaced) {
     return (
       <div className={styles.orderSuccess}>
+        <ToastContainer position="top-right" autoClose={3000} />
         <div className={styles.container}>
           <div className={styles.successContent}>
             <div className={styles.successIcon}>
@@ -103,7 +198,7 @@ const CheckoutPage = () => {
             <h1>Order Placed Successfully!</h1>
             <p>Thank you for your purchase. Your order has been received and is being processed.</p>
             <p>You will receive a confirmation email shortly.</p>
-            <p>Redirecting to homepage...</p>
+            <p>Redirecting to your profile page...</p>
           </div>
         </div>
       </div>
@@ -112,10 +207,11 @@ const CheckoutPage = () => {
 
   return (
     <div className={styles.checkoutPage}>
+      <ToastContainer position="top-right" autoClose={3000} />
       <div className={styles.container}>
         <h1 className={styles.pageTitle}>Checkout</h1>
 
-        <div className={styles.checkoutContent}>
+        <div className={`${styles.checkoutContent} ${pageLoaded ? styles.loaded : ''}`}>
           <div className={styles.checkoutForm}>
             <form onSubmit={handleSubmit}>
               <div className={styles.formSection}>
@@ -224,16 +320,7 @@ const CheckoutPage = () => {
                     {errors.area && <span className={styles.errorMessage}>{errors.area}</span>}
                   </div>
 
-                  <div className={styles.formGroup}>
-                    <label htmlFor="zipCode">Zip Code</label>
-                    <input
-                      type="text"
-                      id="zipCode"
-                      name="zipCode"
-                      value={formData.zipCode}
-                      onChange={handleInputChange}
-                    />
-                  </div>
+                 
                 </div>
               </div>
 
@@ -265,16 +352,7 @@ const CheckoutPage = () => {
                       checked={formData.paymentMethod === "khalti"}
                       onChange={handleInputChange}
                     />
-                    <div className={styles.paymentOptionContent}>
-                      <img
-                        src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Khalti_Digital_Wallet_Logo.png"
-                        alt="Khalti"
-                      />
-                      <div>
-                        <h3>Khalti</h3>
-                        <p>Pay using Khalti digital wallet</p>
-                      </div>
-                    </div>
+                    
                   </label>
 
                   <label className={styles.paymentOption}>
@@ -303,8 +381,8 @@ const CheckoutPage = () => {
                 </div>
               </div>
 
-              <button type="submit" className={styles.placeOrderBtn}>
-                Place Order
+              <button type="submit" className={styles.placeOrderBtn} disabled={isProcessing}>
+                {isProcessing ? "Processing..." : "Place Order"}
               </button>
             </form>
           </div>
@@ -322,7 +400,7 @@ const CheckoutPage = () => {
                       <p>Quantity: {item.quantity}</p>
                     </div>
                   </div>
-                  <div className={styles.itemPrice}>Rs. {(item.price * item.quantity).toLocaleString()}</div>
+                  <div className={styles.itemPrice}>{formatPrice(item.price * item.quantity)}</div>
                 </div>
               ))}
             </div>
@@ -330,17 +408,17 @@ const CheckoutPage = () => {
             <div className={styles.orderTotal}>
               <div className={styles.totalItem}>
                 <span>Subtotal</span>
-                <span>Rs. {subtotal.toLocaleString()}</span>
+                <span>{formatPrice(subtotal)}</span>
               </div>
 
               <div className={styles.totalItem}>
                 <span>Delivery Fee</span>
-                <span>{deliveryFee === 0 ? "Free" : `Rs. ${deliveryFee.toLocaleString()}`}</span>
+                <span>{deliveryFee === 0 ? "Free" : `${formatPrice(deliveryFee)}`}</span>
               </div>
 
               <div className={`${styles.totalItem} ${styles.finalTotal}`}>
                 <span>Total</span>
-                <span>Rs. {total.toLocaleString()}</span>
+                <span>{formatPrice(total)}</span>
               </div>
             </div>
           </div>

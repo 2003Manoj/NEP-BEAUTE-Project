@@ -21,6 +21,7 @@ export const WishlistProvider = ({ children }) => {
           setWishlistItems(parsedWishlist)
         } catch (error) {
           console.error("Error parsing wishlist from localStorage:", error)
+          setWishlistItems([])
         }
       }
     } else {
@@ -38,8 +39,10 @@ export const WishlistProvider = ({ children }) => {
 
   // Add item to wishlist
   const addToWishlist = (product) => {
+    console.log("Adding to wishlist:", product)
+
     if (!user) {
-      // If user is not logged in, redirect to login page
+      // alert("Please log in to add items to your wishlist")
       return false
     }
 
@@ -51,6 +54,7 @@ export const WishlistProvider = ({ children }) => {
         return prevItems
       } else {
         // Item doesn't exist in wishlist, add new item
+        // alert(`${product.name} added to wishlist!`)
         return [...prevItems, product]
       }
     })

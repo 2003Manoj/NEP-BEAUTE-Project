@@ -6,6 +6,7 @@ import { useAuth } from "../../contexts/AuthContext"
 import { useCart } from "../../contexts/CartContext"
 import { useWishlist } from "../../contexts/WishlistContext"
 import SearchBar from "../SearchBar/SearchBar"
+
 import { User, ShoppingCart, Heart, LogOut, Package, ChevronDown, Menu, X } from "lucide-react"
 import styles from "./Header.module.css"
 
@@ -85,10 +86,10 @@ const Header = () => {
                 Categories <ChevronDown size={16} className={styles.dropdownIcon} />
               </span>
               <div className={styles.dropdownContent}>
-                <Link to="/products/skincare">Skincare</Link>
-                <Link to="/products/makeup">Makeup</Link>
-                <Link to="/products/haircare">Haircare</Link>
-                <Link to="/products/fragrance">Fragrance</Link>
+                <Link to="/products?category=skincare">Skincare</Link>
+                <Link to="/products?category=makeup">Makeup</Link>
+                <Link to="/products?category=haircare">Haircare</Link>
+                <Link to="/products?category=fragrance">Fragrance</Link>
               </div>
             </li>
             <li className={styles.dropdown}>
@@ -108,7 +109,7 @@ const Header = () => {
         </nav>
 
         <div className={styles.actions}>
-         
+          
           <Link to="/wishlist" className={styles.wishlistIcon}>
             <Heart size={20} />
             {totalWishlistItems > 0 && <span className={styles.wishlistCount}>{totalWishlistItems}</span>}
@@ -189,16 +190,16 @@ const Header = () => {
                   <ChevronDown size={16} />
                 </div>
                 <div id="categoriesSubMenu" className={styles.mobileSubMenu}>
-                  <Link to="/products/skincare" onClick={closeMobileMenu}>
+                  <Link to="/products?category=skincare" onClick={closeMobileMenu}>
                     Skincare
                   </Link>
-                  <Link to="/products/makeup" onClick={closeMobileMenu}>
+                  <Link to="/products?category=makeup" onClick={closeMobileMenu}>
                     Makeup
                   </Link>
-                  <Link to="/products/haircare" onClick={closeMobileMenu}>
+                  <Link to="/products?category=haircare" onClick={closeMobileMenu}>
                     Haircare
                   </Link>
-                  <Link to="/products/fragrance" onClick={closeMobileMenu}>
+                  <Link to="/products?category=fragrance" onClick={closeMobileMenu}>
                     Fragrance
                   </Link>
                 </div>
@@ -282,7 +283,7 @@ const Header = () => {
               )}
             </ul>
 
-            
+          
           </div>
         </div>
       )}
