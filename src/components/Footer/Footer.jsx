@@ -70,7 +70,7 @@ const Footer = () => {
                 </div>
                 <div className={styles.contactItem}>
                   <Phone size={16} />
-                  <span>+977 1-4123456</span>
+                  <span>+977 9867897080</span>
                 </div>
                 <div className={styles.contactItem}>
                   <Mail size={16} />
@@ -145,10 +145,10 @@ const Footer = () => {
                   <Link to="/faqs">FAQs</Link>
                 </li>
                 <li>
-                  <Link to="/shipping">Shipping & Delivery</Link>
+                  <Link to="/shipping">Shipping </Link>
                 </li>
                 <li>
-                  <Link to="/returns">Returns & Refunds</Link>
+                  <Link to="/returns">Returns </Link>
                 </li>
                 <li>
                   <Link to="/privacy">Privacy Policy</Link>
@@ -165,9 +165,7 @@ const Footer = () => {
                   <Mail size={18} />
                 </button>
               </form>
-              <div className={styles.paymentMethods}>
-                <img src="/images/payment-methods.png" alt="Payment Methods" />
-              </div>
+             
             </div>
           </div>
         </div>
@@ -176,6 +174,7 @@ const Footer = () => {
       <div className={styles.footerBottom}>
         <div className={styles.container}>
           <p>&copy; {new Date().getFullYear()} NepBeaute. All Rights Reserved.</p>
+          <p>Powerd by RGON Studio</p>
           <div className={styles.footerBottomLinks}>
             <Link to="/terms">Terms of Service</Link>
             <Link to="/privacy">Privacy Policy</Link>

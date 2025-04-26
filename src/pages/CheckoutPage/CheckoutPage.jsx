@@ -41,13 +41,13 @@ const CheckoutPage = () => {
   const [isProcessing, setIsProcessing] = useState(false)
   const [pageLoaded, setPageLoaded] = useState(false)
 
- 
+  // Calculate totals
   const subtotal = totalPrice || 0
-  const deliveryFee = subtotal > 2000 ? 0 : 100 
+  const deliveryFee = subtotal > 2000 ? 0 : 100 // Free delivery for orders over Rs. 2000
   const total = subtotal + deliveryFee
 
   useEffect(() => {
-  
+    // Add a short delay to ensure all context data is loaded
     const timer = setTimeout(() => {
       setPageLoaded(true)
       if (cartItems.length === 0 && !orderPlaced) {
@@ -65,7 +65,7 @@ const CheckoutPage = () => {
       [name]: type === "checkbox" ? checked : value,
     }))
 
-
+    // Clear error when field is edited
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }))
     }
@@ -97,10 +97,10 @@ const CheckoutPage = () => {
   const saveOrderToLocalStorage = () => {
     if (!user) return;
     
-    
+    // Generate a unique order ID
     const orderId = "ORD" + Math.floor(100000 + Math.random() * 900000);
     
-  
+    // Create order object
     const newOrder = {
       id: orderId,
       date: new Date().toISOString(),
@@ -127,7 +127,7 @@ const CheckoutPage = () => {
       estimatedDelivery: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString()
     };
     
-  
+    // Get existing orders from localStorage
     let orders = [];
     const existingOrders = localStorage.getItem(`orders-${user.id}`);
     
@@ -140,10 +140,10 @@ const CheckoutPage = () => {
       }
     }
     
-   
+    // Add new order to the beginning of the array
     orders.unshift(newOrder);
     
-    
+    // Save updated orders back to localStorage
     localStorage.setItem(`orders-${user.id}`, JSON.stringify(orders));
     
     return orderId;
@@ -159,23 +159,23 @@ const CheckoutPage = () => {
     setIsProcessing(true)
     toast.info("Processing your order...")
 
-    
+    // Save order to localStorage and get order ID
     const orderId = saveOrderToLocalStorage();
 
-    
+    // Simulate order placement
     setTimeout(() => {
       setOrderPlaced(true)
       clearCart()
       toast.success(`Order #${orderId} placed successfully!`)
 
-   
+      // Redirect to orders page after a delay
       setTimeout(() => {
         navigate("/profile")
       }, 3000)
     }, 2000)
   }
 
- 
+
   if (!pageLoaded) {
     return (
       <div className={styles.loadingContainer}>
@@ -204,7 +204,6 @@ const CheckoutPage = () => {
       </div>
     )
   }
-
   return (
     <div className={styles.checkoutPage}>
       <ToastContainer position="top-right" autoClose={3000} />
@@ -342,17 +341,6 @@ const CheckoutPage = () => {
                         <p>Pay when you receive your order</p>
                       </div>
                     </div>
-                  </label>
-
-                  <label className={styles.paymentOption}>
-                    <input
-                      type="radio"
-                      name="paymentMethod"
-                      value="khalti"
-                      checked={formData.paymentMethod === "khalti"}
-                      onChange={handleInputChange}
-                    />
-                    
                   </label>
 
                   <label className={styles.paymentOption}>

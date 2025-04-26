@@ -1320,3 +1320,10 @@
     font-size: 2rem;
   }
 }
+.socialLinks{
+  margin: 30px;
+
+}
+.socialLinks a{
+  padding: 17px;
+}
