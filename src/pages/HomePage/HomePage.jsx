@@ -237,8 +237,7 @@ const HomePage = () => {
             <Link to="/products/haircare" className={styles.categoryCard}>
               <div className={styles.categoryImage}>
                 <img
-                  src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/b2f1a927-c848-4274-ad62-4f14f3ab77fa.png"
-                  alt="Haircare"
+                  src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/7cb7819d-4d25-49d8-b77c-990dbfdfed32.png"
                 />
               </div>
               <div className={styles.categoryContent}>
