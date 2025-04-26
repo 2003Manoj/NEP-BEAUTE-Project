@@ -213,7 +213,7 @@ const HomePage = () => {
               </div>
               <div className={styles.categoryContent}>
                 <h3>Skincare</h3>
-                <p>Nourish your skin with natural ingredients</p>
+                <p>Nourish your skin with natural ingredient</p>
                 <span className={styles.categoryLink}>
                   Shop Now <ChevronRight size={16} />
                 </span>
