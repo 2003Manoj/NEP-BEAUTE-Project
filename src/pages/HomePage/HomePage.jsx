@@ -207,7 +207,7 @@ const HomePage = () => {
             <Link to="/products/skincare" className={styles.categoryCard}>
               <div className={styles.categoryImage}>
                 <img
-                  src="https://images.pexels.com/photos/3737586/pexels-photo-3737586.jpeg?auto=compress&cs=tinysrgb&w=600"
+                  src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/b2f1a927-c848-4274-ad62-4f14f3ab77fa.png"
                   alt="Skincare"
                 />
               </div>
@@ -237,7 +237,7 @@ const HomePage = () => {
             <Link to="/products/haircare" className={styles.categoryCard}>
               <div className={styles.categoryImage}>
                 <img
-                  src="https://images.pexels.com/photos/3997989/pexels-photo-3997989.jpeg?auto=compress&cs=tinysrgb&w=600"
+                  src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/b2f1a927-c848-4274-ad62-4f14f3ab77fa.png"
                   alt="Haircare"
                 />
               </div>
