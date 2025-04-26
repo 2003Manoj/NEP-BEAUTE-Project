@@ -3,6 +3,8 @@
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { useCart } from "../../contexts/CartContext"
+import { ToastContainer, toast } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
 import styles from "./CartPage.module.css"
 
 const CartPage = () => {
@@ -17,18 +19,47 @@ const CartPage = () => {
   }
 
   const handleRemoveItem = (productId) => {
-    removeFromCart(productId)
+    // Using toastify for confirmation instead of window.confirm
+    const toastId = toast.info(
+      <div>
+        <p>Are you sure you want to remove this item from your cart?</p>
+        <button 
+          onClick={() => {
+            // First dismiss the confirmation toast
+            toast.dismiss(toastId)
+            // Then remove the item and show success message
+            removeFromCart(productId)
+            toast.success("Item removed from cart")
+          }}
+          style={{ marginRight: '10px', padding: '5px 10px', background: '#e74c3c', color: 'white', border: 'none', borderRadius: '4px' }}
+        >
+          Yes, Remove
+        </button>
+        <button 
+          onClick={() => toast.dismiss(toastId)}
+          style={{ padding: '5px 10px', background: '#7f8c8d', color: 'white', border: 'none', borderRadius: '4px' }}
+        >
+          Cancel
+        </button>
+      </div>,
+      {
+        autoClose: false,
+        closeOnClick: false,
+        draggable: false,
+        closeButton: false
+      }
+    )
   }
 
   const handleApplyCoupon = (e) => {
     e.preventDefault()
 
-    // Mock coupon validation
     if (couponCode.toLowerCase() === "nepbeaute20") {
-      setDiscount(totalPrice * 0.2) // 20% discount
+      setDiscount(totalPrice * 0.2) 
       setCouponApplied(true)
+      toast.success("Coupon applied successfully! 20% discount added to your order.")
     } else {
-      alert("Invalid coupon code")
+      toast.error("Invalid coupon code. Please try again.")
     }
   }
 
@@ -36,14 +67,23 @@ const CartPage = () => {
     navigate("/checkout")
   }
 
-  // Calculate totals
   const subtotal = totalPrice
-  const deliveryFee = subtotal > 2000 ? 0 : 100 // Free delivery for orders over Rs. 2000
+  const deliveryFee = subtotal > 2000 ? 0 : 100 
   const total = subtotal + deliveryFee - discount
 
   if (cartItems.length === 0) {
     return (
       <div className={styles.emptyCart}>
+        <ToastContainer 
+          position="bottom-right" 
+          autoClose={3000} 
+          hideProgressBar={false} 
+          newestOnTop
+          closeOnClick
+          pauseOnHover
+          draggable
+          style={{ zIndex: 9999 }}
+        />
         <div className={styles.container}>
           <div className={styles.emptyCartContent}>
             <i className="fas fa-shopping-cart"></i>
@@ -60,6 +100,18 @@ const CartPage = () => {
 
   return (
     <div className={styles.cartPage}>
+      {/* Toast container with fixed position and high z-index */}
+      <ToastContainer 
+        position="bottom-right" 
+        autoClose={3000} 
+        hideProgressBar={false} 
+        newestOnTop
+        closeOnClick
+        pauseOnHover
+        draggable
+        style={{ zIndex: 9999 }}
+      />
+      
       <div className={styles.container}>
         <h1 className={styles.pageTitle}>Shopping Cart</h1>
 
@@ -70,7 +122,7 @@ const CartPage = () => {
               <div className={styles.priceCol}>Price</div>
               <div className={styles.quantityCol}>Quantity</div>
               <div className={styles.totalCol}>Total</div>
-              <div className={styles.actionCol}></div>
+              <div className={styles.actionCol}>Actions</div>
             </div>
 
             {cartItems.map((item) => (
@@ -92,7 +144,12 @@ const CartPage = () => {
                 <div className={styles.quantityCol}>
                   <div className={styles.quantitySelector}>
                     <button
-                      onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
+                      onClick={() => {
+                        if (item.quantity > 1) {
+                          handleQuantityChange(item.id, item.quantity - 1)
+                          toast.info(`Quantity updated to ${item.quantity - 1}`)
+                        }
+                      }}
                       disabled={item.quantity <= 1}
                     >
                       -
@@ -101,9 +158,16 @@ const CartPage = () => {
                       type="number"
                       min="1"
                       value={item.quantity}
-                      onChange={(e) => handleQuantityChange(item.id, e.target.value)}
+                      onChange={(e) => {
+                        const newQty = Number.parseInt(e.target.value) || 1
+                        handleQuantityChange(item.id, newQty)
+                        toast.info(`Quantity updated to ${newQty}`)
+                      }}
                     />
-                    <button onClick={() => handleQuantityChange(item.id, item.quantity + 1)}>+</button>
+                    <button onClick={() => {
+                      handleQuantityChange(item.id, item.quantity + 1)
+                      toast.info(`Quantity updated to ${item.quantity + 1}`)
+                    }}>+</button>
                   </div>
                 </div>
 
@@ -112,8 +176,13 @@ const CartPage = () => {
                 </div>
 
                 <div className={styles.actionCol}>
-                  <button className={styles.removeBtn} onClick={() => handleRemoveItem(item.id)}>
-                    <i className="fas fa-trash"></i>
+                  <button 
+                    className={styles.removeBtn} 
+                    onClick={() => handleRemoveItem(item.id)}
+                    aria-label="Remove item"
+                    title="Remove item"
+                  >
+                    <i className="fas fa-trash"></i> Remove
                   </button>
                 </div>
               </div>
@@ -123,6 +192,42 @@ const CartPage = () => {
               <Link to="/products" className={styles.continueShoppingBtn}>
                 <i className="fas fa-arrow-left"></i> Continue Shopping
               </Link>
+              <button 
+                className={styles.clearCartBtn}
+                onClick={() => {
+                  const clearToastId = toast.info(
+                    <div>
+                      <p>Are you sure you want to clear your entire cart?</p>
+                      <button 
+                        onClick={() => {
+                          // First dismiss this confirmation toast
+                          toast.dismiss(clearToastId)
+                          // Then clear the cart and show success message
+                          cartItems.forEach(item => removeFromCart(item.id));
+                          toast.success("Cart cleared successfully!")
+                        }}
+                        style={{ marginRight: '10px', padding: '5px 10px', background: '#e74c3c', color: 'white', border: 'none', borderRadius: '4px' }}
+                      >
+                        Yes, Clear Cart
+                      </button>
+                      <button 
+                        onClick={() => toast.dismiss(clearToastId)}
+                        style={{ padding: '5px 10px', background: '#7f8c8d', color: 'white', border: 'none', borderRadius: '4px' }}
+                      >
+                        Cancel
+                      </button>
+                    </div>,
+                    {
+                      autoClose: false,
+                      closeOnClick: false,
+                      draggable: false,
+                      closeButton: false
+                    }
+                  )
+                }}
+              >
+                <i className="fas fa-trash-alt"></i> Clear Cart
+              </button>
             </div>
           </div>
 
@@ -171,14 +276,19 @@ const CartPage = () => {
               </div>
             )}
 
-            <button className={styles.checkoutBtn} onClick={handleProceedToCheckout}>
+            <button 
+              className={styles.checkoutBtn} 
+              onClick={() => {
+                handleProceedToCheckout()
+                toast.success("Proceeding to checkout!")
+              }}
+            >
               Proceed to Checkout
             </button>
 
             <div className={styles.paymentMethods}>
               <p>We Accept:</p>
               <div className={styles.paymentIcons}>
-                
                 <img src="https://esewa.com.np/common/images/esewa_logo.png" alt="eSewa" />
                 <img src="https://cdn-icons-png.flaticon.com/512/1554/1554401.png" alt="Cash on Delivery" />
               </div>

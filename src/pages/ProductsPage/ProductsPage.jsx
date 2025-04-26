@@ -7,6 +7,7 @@ import PriceRangeSlider from "../../components/PriceRangeSlider/PriceRangeSlider
 import { getProducts } from "../../services/productService"
 import { Filter, SlidersHorizontal, ChevronDown, X, Check, Grid, List, Star } from "lucide-react"
 import styles from "./ProductsPage.module.css"
+import ProductQuickView from "../../components/ProductQuickView/ProductQuickView"
 
 const ProductsPage = () => {
   const { category } = useParams()
@@ -38,6 +39,9 @@ const ProductsPage = () => {
     brands: true,
     rating: true,
   })
+
+  const [quickViewProduct, setQuickViewProduct] = useState(null)
+  const [showQuickView, setShowQuickView] = useState(false)
 
   // Mock brands for filter
   const availableBrands = [
@@ -252,8 +256,32 @@ const ProductsPage = () => {
     return "All Products"
   }
 
+  const handleQuickView = (product) => {
+    console.log("Opening quick view for product:", product)
+    if (!product) {
+      console.error("Attempted to open quick view with undefined product")
+      return
+    }
+    setQuickViewProduct(product)
+    setShowQuickView(true)
+    // Prevent scrolling when modal is open
+    document.body.style.overflow = "hidden"
+  }
+
+  const closeQuickView = () => {
+    console.log("Closing quick view")
+    setShowQuickView(false)
+    // Re-enable scrolling when modal is closed
+    document.body.style.overflow = "auto"
+    // Use setTimeout to avoid state update conflicts
+    setTimeout(() => {
+      setQuickViewProduct(null)
+    }, 300)
+  }
+
   return (
     <div className={styles.productsPage}>
+      {showQuickView && quickViewProduct && <ProductQuickView product={quickViewProduct} onClose={closeQuickView} />}
       <div className={styles.container}>
         <div className={styles.pageHeader}>
           <h1 className={styles.pageTitle}>{getPageTitle()}</h1>
@@ -496,7 +524,12 @@ const ProductsPage = () => {
             ) : (
               <div className={`${styles.productsWrapper} ${styles[viewMode]}`}>
                 {filteredProducts.map((product) => (
-                  <ProductCard key={product.id} product={product} horizontal={viewMode === "list"} />
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    horizontal={viewMode === "list"}
+                    onQuickView={handleQuickView}
+                  />
                 ))}
               </div>
             )}

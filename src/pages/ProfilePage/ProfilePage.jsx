@@ -1,11 +1,11 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { useAuth } from "../../contexts/AuthContext"
 import { useCart } from "../../contexts/CartContext"
 import { useWishlist } from "../../contexts/WishlistContext"
-import { User, ShoppingBag, Heart, MapPin, Lock, LogOut, Edit, Save, X, Check } from "lucide-react"
+import { User, ShoppingBag, Heart, MapPin, Lock, LogOut, Edit, Save, X } from "lucide-react"
 import styles from "./ProfilePage.module.css"
 
 const ProfilePage = () => {
@@ -35,7 +35,8 @@ const ProfilePage = () => {
       const savedOrders = localStorage.getItem(`nepbeaute-orders-${user.id}`)
       if (savedOrders) {
         try {
-          setOrders(JSON.parse(savedOrders))
+          const parsedOrders = JSON.parse(savedOrders)
+          setOrders(parsedOrders)
         } catch (error) {
           console.error("Error parsing orders:", error)
           setOrders([])
@@ -55,6 +56,26 @@ const ProfilePage = () => {
                     { id: 1, name: "Himalayan Face Wash", quantity: 1, price: 850 },
                     { id: 2, name: "Aloe Vera Gel", quantity: 2, price: 825 },
                   ],
+          },
+          {
+            id: "ORD" + Math.floor(100000 + Math.random() * 900000),
+            date: new Date(Date.now() - Math.floor(Math.random() * 30) * 24 * 60 * 60 * 1000).toISOString(),
+            status: Math.random() > 0.5 ? "Delivered" : "Processing",
+            total: Math.floor(1500 + Math.random() * 3000),
+            items:
+              cartItems.length > 0
+                ? cartItems.slice(0, Math.min(3, cartItems.length))
+                : [{ id: 3, name: "Herbal Shampoo", quantity: 1, price: 750 }],
+          },
+          {
+            id: "ORD" + Math.floor(100000 + Math.random() * 900000),
+            date: new Date(Date.now() - Math.floor(Math.random() * 30) * 24 * 60 * 60 * 1000).toISOString(),
+            status: "Delivered",
+            total: Math.floor(1500 + Math.random() * 3000),
+            items: [
+              { id: 4, name: "Ayurvedic Hair Oil", quantity: 2, price: 495 },
+              { id: 5, name: "Herbal Face Pack", quantity: 1, price: 345 },
+            ],
           },
         ]
         setOrders(mockOrders)
@@ -167,18 +188,12 @@ const ProfilePage = () => {
                 <User size={18} />
                 My Profile
               </button>
-              <button
-                className={`${styles.navItem}`}
-                onClick={navigateToOrders}
-              >
+              <button className={`${styles.navItem}`} onClick={navigateToOrders}>
                 <ShoppingBag size={18} />
                 My Orders
                 <span className={styles.badge}>{orders.length}</span>
               </button>
-              <button
-                className={`${styles.navItem}`}
-                onClick={navigateToWishlist}
-              >
+              <button className={`${styles.navItem}`} onClick={navigateToWishlist}>
                 <Heart size={18} />
                 My Wishlist
                 <span className={styles.badge}>{wishlistItems.length}</span>

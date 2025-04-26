@@ -64,8 +64,8 @@ const LoginPage = () => {
       // Mock user data
       const userData = {
         id: "user123",
-        firstName: "John",
-        lastName: "Doe",
+        firstName: "",
+        lastName: "",
         email: formData.email,
         phone: "9876543210",
         address: "Thamel, Kathmandu",
