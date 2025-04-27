@@ -109,7 +109,7 @@ const Header = () => {
         </nav>
 
         <div className={styles.actions}>
-          
+
           <Link to="/wishlist" className={styles.wishlistIcon}>
             <Heart size={20} />
             {totalWishlistItems > 0 && <span className={styles.wishlistCount}>{totalWishlistItems}</span>}
@@ -153,7 +153,7 @@ const Header = () => {
 
           {isMobileView && (
             <button className={styles.mobileMenuButton} onClick={toggleMobileMenu}>
-              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              {isMobileMenuOpen ? "" : <Menu size={24} />}
             </button>
           )}
         </div>
@@ -161,8 +161,24 @@ const Header = () => {
 
       {/* Mobile Menu */}
       {isMobileView && (
+
         <div className={`${styles.mobileNav} ${isMobileMenuOpen ? styles.active : ""}`}>
           <div className={styles.mobileNavContent}>
+            <button
+              className={styles.mobileMenuButton}
+              onClick={toggleMobileMenu}
+              style={{
+                position: "absolute",
+                top: "1rem",
+                right: "1rem",
+                background: "transparent",
+                border: "none",
+                zIndex: 1000,
+              }}
+            >
+              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+
             <div className={styles.mobileSearchContainer}>
               <SearchBar />
             </div>
@@ -283,7 +299,7 @@ const Header = () => {
               )}
             </ul>
 
-          
+
           </div>
         </div>
       )}

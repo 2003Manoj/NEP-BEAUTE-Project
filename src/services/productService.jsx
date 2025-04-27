@@ -87,7 +87,7 @@ const generateProducts = () => {
     {
       name: "Blush",
       description: "Natural looking blush for a healthy glow.",
-      image: "https://images.pexels.com/photos/2533266/pexels-photo-2533266.jpeg?auto=compress&cs=tinysrgb&w=600",
+      image: "https://api.deepai.org/job-view-file/844258de-48ac-4656-b093-e3c2379f24f3/outputs/output.jpg",
     },
     {
       name: "Foundation",

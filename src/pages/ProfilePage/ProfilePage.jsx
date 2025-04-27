@@ -12,6 +12,7 @@ const ProfilePage = () => {
   const { user, updateProfile, logout } = useAuth()
   const { cartItems, totalPrice } = useCart()
   const { wishlistItems } = useWishlist()
+  
   const navigate = useNavigate()
 
   const [activeTab, setActiveTab] = useState("profile")
