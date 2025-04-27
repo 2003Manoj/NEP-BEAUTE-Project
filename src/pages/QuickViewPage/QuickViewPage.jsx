@@ -24,14 +24,14 @@ const QuickViewPage = () => {
       try {
         setLoading(true)
         
-        // Check if product was passed in location state (preferred approach)
+        
         if (location.state?.product) {
           console.log("Product found in location state:", location.state.product)
           setProduct(location.state.product)
           return
         }
         
-        // If not in location state, try from localStorage
+      
         const storedProduct = localStorage.getItem("quickViewProduct")
         if (storedProduct) {
           console.log("Product found in localStorage")
@@ -39,10 +39,10 @@ const QuickViewPage = () => {
           return
         }
         
-        // If product ID is in the URL, try to fetch it
+       
         if (params.id) {
           console.log("Trying to fetch product by ID:", params.id)
-          // Mock fetch - replace with your actual fetch logic
+        
           const storedProducts = localStorage.getItem("products")
           if (storedProducts) {
             const allProducts = JSON.parse(storedProducts)
@@ -54,7 +54,7 @@ const QuickViewPage = () => {
           }
         }
         
-        // If we get here, no product was found
+        
         setError("Product not found")
         
       } catch (err) {
@@ -68,7 +68,7 @@ const QuickViewPage = () => {
     fetchProduct()
   }, [location.state, params.id])
 
-  // Console log to debug
+  
   useEffect(() => {
     console.log("QuickViewPage mounted")
     console.log("Current product state:", product)
@@ -80,7 +80,7 @@ const QuickViewPage = () => {
     }
   }, [product, loading, error])
 
-  // Generate additional images by adding query parameters to the original URL
+  
   const generateAdditionalImages = (originalUrl) => {
     if (!originalUrl) return ["/placeholder.svg", "/placeholder.svg", "/placeholder.svg"]
 
