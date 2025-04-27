@@ -84,10 +84,10 @@ const QuickViewPage = () => {
   const generateAdditionalImages = (originalUrl) => {
     if (!originalUrl) return ["/placeholder.svg", "/placeholder.svg", "/placeholder.svg"]
 
-    // Extract base URL and query parameters
+    
     const [baseUrl, queryParams] = originalUrl.split("?")
 
-    // Create variations by adding different query parameters
+    
     return [
       originalUrl,
       `${baseUrl}?${queryParams ? queryParams + "&" : ""}v=1`,
