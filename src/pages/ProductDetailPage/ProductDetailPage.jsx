@@ -33,7 +33,7 @@ const ProductDetailPage = () => {
   const [activeImage, setActiveImage] = useState(0)
   const [reviews, setReviews] = useState([])
 
-  // Product images
+  
   const [productImages, setProductImages] = useState([])
 
   useEffect(() => {
@@ -43,16 +43,15 @@ const ProductDetailPage = () => {
         const productData = await getProductById(id)
         setProduct(productData)
 
-        // Add to recently viewed
+        
         addToRecentlyViewed(productData)
 
-        // Generate multiple images for the product
-        // Use the product's main image and generate variations for additional views
+      
         setProductImages([
           productData.image,
-          productData.image.replace("w=600", "w=601"), // Slight URL variation to get different image
-          productData.image.replace("w=600", "w=602"), // Slight URL variation to get different image
-          productData.image.replace("w=600", "w=603"), // Slight URL variation to get different image
+          productData.image.replace("w=600", "w=601"), 
+          productData.image.replace("w=600", "w=602"), 
+          productData.image.replace("w=600", "w=603"), 
         ])
 
         // Fetch related products
