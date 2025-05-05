@@ -33,7 +33,7 @@ const ProductDetailPage = () => {
   const [activeImage, setActiveImage] = useState(0)
   const [reviews, setReviews] = useState([])
 
-  
+
   const [productImages, setProductImages] = useState([])
 
   useEffect(() => {
@@ -54,7 +54,7 @@ const ProductDetailPage = () => {
           productData.image.replace("w=600", "w=603"), 
         ])
 
-        // Fetch related products
+      
         const related = await getRelatedProducts(productData.category, id)
         setRelatedProducts(related)
 

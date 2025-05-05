@@ -95,7 +95,6 @@ const QuickViewPage = () => {
     ]
   }
 
-  // Use the product's actual image and generate variations
   const productImages = product ? generateAdditionalImages(product.image) : []
 
   const handleAddToCart = () => {
