@@ -23,7 +23,6 @@ import { CompareProvider } from "./contexts/CompareContext"
 import { CurrencyProvider } from "./contexts/CurrencyContext"
 import { RecentlyViewedProvider } from "./contexts/RecentlyViewedContext"
 import { OrderProvider } from "./contexts/OrderContext"
-
 import "./App.css"
 
 function App() {
