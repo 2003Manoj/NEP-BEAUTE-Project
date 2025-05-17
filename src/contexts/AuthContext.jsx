@@ -10,10 +10,9 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
 
-  // Get cart context functions (will be undefined on first render)
   const cartContext = useContext(AuthContext)
 
-  // Load user from localStorage on initial render
+
   useEffect(() => {
     const savedUser = localStorage.getItem("nepbeaute-user")
     if (savedUser) {
