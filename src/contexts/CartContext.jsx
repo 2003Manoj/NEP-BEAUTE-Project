@@ -13,16 +13,16 @@ export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([])
   const { user } = useAuth()
 
-  // Get cart key based on user status
+
   const getCartKey = () => {
     return user ? `cart_${user.id}` : "cart_anonymous"
   }
 
-  // Calculate total price
+
   const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
 
   useEffect(() => {
-    // Load cart items from localStorage based on user status
+  
     const loadCartItems = () => {
       const cartKey = getCartKey()
       const storedCart = localStorage.getItem(cartKey)
@@ -37,9 +37,8 @@ export const CartProvider = ({ children }) => {
     }
 
     loadCartItems()
-  }, [user]) // Re-run when user changes (login/logout)
+  }, [user]) 
 
-  // Save cart to localStorage whenever it changes
   useEffect(() => {
     const cartKey = getCartKey()
     localStorage.setItem(cartKey, JSON.stringify(cartItems))
@@ -60,8 +59,7 @@ export const CartProvider = ({ children }) => {
       }
     })
 
-    // Remove the alert
-    // alert(`${product.name} added to cart!`)
+    
     return true
   }
 
@@ -83,36 +81,35 @@ export const CartProvider = ({ children }) => {
   }
 
   const mergeAnonymousCart = (userId) => {
-    // Get anonymous cart
+   
     const anonymousCart = JSON.parse(localStorage.getItem("cart_anonymous") || "[]")
 
-    // Get user cart if it exists
     const userCart = JSON.parse(localStorage.getItem(`cart_${userId}`) || "[]")
 
     if (anonymousCart.length === 0) {
-      // No anonymous items to merge
+   
       return
     }
 
-    // Merge carts
+    
     const mergedCart = [...userCart]
 
     anonymousCart.forEach((anonymousItem) => {
       const existingItemIndex = mergedCart.findIndex((item) => item.id === anonymousItem.id)
 
       if (existingItemIndex >= 0) {
-        // Item exists in user cart, update quantity
+        
         mergedCart[existingItemIndex].quantity += anonymousItem.quantity
       } else {
-        // Item doesn't exist in user cart, add it
+        
         mergedCart.push(anonymousItem)
       }
     })
 
-    // Update state with merged cart
+    
     setCartItems(mergedCart)
 
-    // Clear anonymous cart
+
     localStorage.removeItem("cart_anonymous")
   }
 

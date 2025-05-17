@@ -26,7 +26,7 @@ export const AuthProvider = ({ children }) => {
     setLoading(false)
   }, [])
 
-  // Update localStorage whenever user changes
+ 
   useEffect(() => {
     if (user) {
       localStorage.setItem("nepbeaute-user", JSON.stringify(user))
@@ -35,12 +35,11 @@ export const AuthProvider = ({ children }) => {
     }
   }, [user])
 
-  // Login function
+ 
   const login = (userData) => {
     setUser(userData)
 
-    // Merge anonymous cart with user cart after login
-    // We need to use a timeout to ensure the CartContext is available
+    
     setTimeout(() => {
       if (cartContext && cartContext.mergeAnonymousCart) {
         cartContext.mergeAnonymousCart(userData.id)
@@ -50,10 +49,9 @@ export const AuthProvider = ({ children }) => {
     return true
   }
 
-  // Register function
+ 
   const register = (userData) => {
-    // In a real app, you would send this data to your backend
-    // For now, we'll just simulate a successful registration
+    
     const newUser = {
       ...userData,
       id: Date.now().toString(),
@@ -62,8 +60,6 @@ export const AuthProvider = ({ children }) => {
 
     setUser(newUser)
 
-    // Merge anonymous cart with new user cart after registration
-    // We need to use a timeout to ensure the CartContext is available
     setTimeout(() => {
       if (cartContext && cartContext.mergeAnonymousCart) {
         cartContext.mergeAnonymousCart(newUser.id)
@@ -73,12 +69,12 @@ export const AuthProvider = ({ children }) => {
     return true
   }
 
-  // Logout function
+ 
   const logout = () => {
     setUser(null)
   }
 
-  // Update user profile
+
   const updateProfile = (updatedData) => {
     setUser((prevUser) => ({
       ...prevUser,
