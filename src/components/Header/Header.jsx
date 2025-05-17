@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { useAuth } from "../../contexts/AuthContext"
 import { useCart } from "../../contexts/CartContext"
-// import { useWishlist } from "../../contexts/WishlistContext"
+import { useWishlist } from "../../contexts/WishlistContext"
 import SearchBar from "../SearchBar/SearchBar"
 
 import { User, ShoppingCart, Heart, LogOut, Package, ChevronDown, Menu, X } from "lucide-react"
@@ -16,7 +16,7 @@ const Header = () => {
   const [isMobileView, setIsMobileView] = useState(false)
   const { user, logout } = useAuth()
   const { cartItems } = useCart()
-  // const { wishlistItems } = useWishlist()
+  const { wishlistItems } = useWishlist()
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -58,7 +58,7 @@ const Header = () => {
   }
 
   const totalCartItems = cartItems.reduce((total, item) => total + item.quantity, 0)
-  // const totalWishlistItems = wishlistItems.length
+  const totalWishlistItems = wishlistItems.length
 
   return (
     <header className={`${styles.header} ${isScrolled ? styles.scrolled : ""}`}>
@@ -112,7 +112,7 @@ const Header = () => {
 
           <Link to="/wishlist" className={styles.wishlistIcon}>
             <Heart size={20} />
-            { <span ></span>}
+             {totalWishlistItems > 0 && <span className={styles.wishlistCount}>{totalWishlistItems}</span>}
           </Link>
 
           <Link to="/cart" className={styles.cartIcon}>
@@ -255,7 +255,8 @@ const Header = () => {
               <li className={styles.mobileNavItem}>
                 <Link to="/wishlist" className={styles.mobileNavLink} onClick={closeMobileMenu}>
                   My Wishlist
-                  {   <span ></span>}
+                   {totalWishlistItems > 0 && <span className={styles.mobileNavBadge}>{totalWishlistItems}</span>}
+                 
                 </Link>
               </li>
               <li className={styles.mobileNavItem}>
