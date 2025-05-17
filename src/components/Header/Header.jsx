@@ -256,7 +256,6 @@ const Header = () => {
                 <Link to="/wishlist" className={styles.mobileNavLink} onClick={closeMobileMenu}>
                   My Wishlist
                    {totalWishlistItems > 0 && <span className={styles.mobileNavBadge}>{totalWishlistItems}</span>}
-                 
                 </Link>
               </li>
               <li className={styles.mobileNavItem}>
