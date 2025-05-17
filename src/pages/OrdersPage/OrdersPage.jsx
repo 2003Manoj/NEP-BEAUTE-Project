@@ -22,7 +22,7 @@ const OrdersPage = () => {
       return
     }
 
-    // Fetch user orders
+    
     const fetchOrders = async () => {
       setLoading(true)
       try {

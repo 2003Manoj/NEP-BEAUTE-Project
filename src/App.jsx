@@ -16,7 +16,6 @@ import WishlistPage from "./pages/WishlistPage/WishlistPage"
 import ProfilePage from "./pages/ProfilePage/ProfilePage"
 import OrdersPage from "./pages/OrdersPage/OrdersPage"
 import QuickViewPage from "./pages/QuickViewPage/QuickViewPage"
-
 import { AuthProvider } from "./contexts/AuthContext"
 import { CartProvider } from "./contexts/CartContext"
 import { WishlistProvider } from "./contexts/WishlistContext"
@@ -24,7 +23,6 @@ import { CompareProvider } from "./contexts/CompareContext"
 import { CurrencyProvider } from "./contexts/CurrencyContext"
 import { RecentlyViewedProvider } from "./contexts/RecentlyViewedContext"
 import { OrderProvider } from "./contexts/OrderContext"
-
 import "./App.css"
 
 function App() {
