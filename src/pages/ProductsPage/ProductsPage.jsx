@@ -25,7 +25,7 @@ const ProductsPage = () => {
     priceRange: [0, 10000],
     sortBy: "newest",
     brands: brandParam ? [brandParam] : [],
-    rating: 0,
+   
   })
   const [priceStats, setPriceStats] = useState({
     min: 0,
@@ -37,7 +37,7 @@ const ProductsPage = () => {
     categories: true,
     price: true,
     brands: true,
-    rating: true,
+   
   })
 
   const [quickViewProduct, setQuickViewProduct] = useState(null)
@@ -134,9 +134,7 @@ const ProductsPage = () => {
     }
 
     // Apply rating filter
-    if (filters.rating > 0) {
-      result = result.filter((product) => product.rating >= filters.rating)
-    }
+    
 
     // Apply search query
     if (searchQuery) {
@@ -160,9 +158,7 @@ const ProductsPage = () => {
       case "popularity":
         result.sort((a, b) => b.reviewCount - a.reviewCount)
         break
-      case "rating":
-        result.sort((a, b) => b.rating - a.rating)
-        break
+      
       case "discount":
         result.sort((a, b) => {
           const discountA = a.originalPrice ? ((a.originalPrice - a.price) / a.originalPrice) * 100 : 0
@@ -205,12 +201,7 @@ const ProductsPage = () => {
     })
   }
 
-  const handleRatingChange = (rating) => {
-    setFilters((prev) => ({
-      ...prev,
-      rating: prev.rating === rating ? 0 : rating,
-    }))
-  }
+ 
 
   const toggleFilterSection = (section) => {
     setExpandedFilters((prev) => ({
@@ -225,7 +216,7 @@ const ProductsPage = () => {
       priceRange: [priceStats.min, priceStats.max],
       sortBy: "newest",
       brands: [],
-      rating: 0,
+   
     })
 
     // Clear URL parameters
@@ -340,7 +331,7 @@ const ProductsPage = () => {
                 <option value="price-low-high">Price: Low to High</option>
                 <option value="price-high-low">Price: High to Low</option>
                 <option value="popularity">Popularity</option>
-                <option value="rating">Rating</option>
+                
                 <option value="discount">Discount</option>
               </select>
             </div>
@@ -466,34 +457,9 @@ const ProductsPage = () => {
               </div>
 
               <div className={styles.filterSection}>
-                <button className={styles.filterHeader} onClick={() => toggleFilterSection("rating")}>
-                  <h3>Rating</h3>
-                  <ChevronDown size={18} className={expandedFilters.rating ? styles.expanded : ""} />
-                </button>
+                
 
-                {expandedFilters.rating && (
-                  <div className={styles.ratingFilter}>
-                    {[4, 3, 2, 1].map((rating) => (
-                      <button
-                        key={rating}
-                        className={`${styles.ratingButton} ${filters.rating === rating ? styles.active : ""}`}
-                        onClick={() => handleRatingChange(rating)}
-                      >
-                        <div className={styles.stars}>
-                          {[...Array(5)].map((_, i) => (
-                            <Star
-                              key={i}
-                              size={14}
-                              fill={i < rating ? "currentColor" : "none"}
-                              className={i < rating ? styles.starFilled : styles.starEmpty}
-                            />
-                          ))}
-                        </div>
-                        <span>& Up</span>
-                      </button>
-                    ))}
-                  </div>
-                )}
+               
               </div>
             </div>
 

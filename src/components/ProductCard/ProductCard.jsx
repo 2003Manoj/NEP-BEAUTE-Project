@@ -125,13 +125,7 @@ const ProductCard = ({ product, horizontal = false, onQuickView }) => {
           <h3 className={styles.productName}>{product.name}</h3>
 
           <div className={styles.productMeta}>
-            <div className={styles.rating}>
-              <div className={styles.ratingStars}>
-                <Star size={14} fill="currentColor" strokeWidth={0} />
-                <span>{product.rating}</span>
-              </div>
-              <span className={styles.ratingCount}>({product.reviewCount})</span>
-            </div>
+           
 
             <div className={styles.priceContainer}>
               <PriceDisplay price={product.price} originalPrice={product.originalPrice} size="small" />

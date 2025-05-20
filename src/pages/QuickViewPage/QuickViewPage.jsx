@@ -208,13 +208,7 @@ const QuickViewPage = () => {
           <div className={styles.brandName}>{product.brand}</div>
           <h1 className={styles.productName}>{product.name}</h1>
 
-          <div className={styles.rating}>
-            <div className={styles.ratingStars}>
-              <Star size={14} fill="currentColor" strokeWidth={0} />
-              <span>{product.rating}</span>
-            </div>
-            <span className={styles.ratingCount}>({product.reviewCount} reviews)</span>
-          </div>
+         
 
           <div className={styles.priceContainer}>
             <span className={styles.price}>${product.price?.toFixed(2) || "0.00"}</span>

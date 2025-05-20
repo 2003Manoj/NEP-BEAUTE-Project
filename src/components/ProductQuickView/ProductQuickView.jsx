@@ -134,13 +134,7 @@ const ProductQuickView = ({ product, onClose }) => {
             <div className={styles.brandName}>{product.brand}</div>
             <h2 className={styles.productName}>{product.name}</h2>
 
-            <div className={styles.rating}>
-              <div className={styles.ratingStars}>
-                <Star size={14} fill="currentColor" strokeWidth={0} />
-                <span>{product.rating}</span>
-              </div>
-              <span className={styles.ratingCount}>({product.reviewCount} reviews)</span>
-            </div>
+            
 
             <div className={styles.priceContainer}>
               <PriceDisplay price={product.price} originalPrice={product.originalPrice} size="large" />

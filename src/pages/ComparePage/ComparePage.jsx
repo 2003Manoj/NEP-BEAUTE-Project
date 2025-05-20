@@ -102,7 +102,7 @@ const ComparePage = () => {
   const attributes = [
     { name: "Brand", key: "brand" },
     { name: "Category", key: "category" },
-    { name: "Rating", key: "rating", type: "rating" },
+    // { name: "Rating", key: "rating", type: "rating" },
     { name: "Price", key: "price", type: "price" },
     { name: "Original Price", key: "originalPrice", type: "price" },
     { name: "Discount", key: "discount", type: "discount" },

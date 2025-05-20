@@ -295,11 +295,11 @@ const HomePage = () => {
                   <div className={styles.trendingInfo}>
                     <div className={styles.trendingBrand}>{product.brand}</div>
                     <h3 className={styles.trendingName}>{product.name}</h3>
-                    <div className={styles.trendingRating}>
+                    {/* <div className={styles.trendingRating}>
                       <Star size={14} fill="currentColor" />
                       <span>{product.rating}</span>
                       <span className={styles.trendingReviews}>({product.reviewCount})</span>
-                    </div>
+                    </div> */}
                     <div className={styles.trendingPrice}>
                       <span>Rs. {product.price.toLocaleString()}</span>
                       {product.originalPrice && (

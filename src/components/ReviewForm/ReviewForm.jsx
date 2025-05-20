@@ -7,24 +7,17 @@ import styles from "./ReviewForm.module.css"
 
 const ReviewForm = ({ productId, onReviewSubmit }) => {
   const { user } = useAuth()
-  const [rating, setRating] = useState(0)
-  const [hoverRating, setHoverRating] = useState(0)
+ 
   const [reviewText, setReviewText] = useState("")
   const [title, setTitle] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState("")
 
-  const handleRatingClick = (selectedRating) => {
-    setRating(selectedRating)
-  }
+ 
 
-  const handleRatingHover = (hoveredRating) => {
-    setHoverRating(hoveredRating)
-  }
+  
 
-  const handleRatingLeave = () => {
-    setHoverRating(0)
-  }
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -34,10 +27,7 @@ const ReviewForm = ({ productId, onReviewSubmit }) => {
       return
     }
 
-    if (rating === 0) {
-      setError("Please select a rating")
-      return
-    }
+    
 
     if (!title.trim()) {
       setError("Please enter a review title")
@@ -74,7 +64,7 @@ const ReviewForm = ({ productId, onReviewSubmit }) => {
       onReviewSubmit(newReview)
 
       // Reset form
-      setRating(0)
+      
       setReviewText("")
       setTitle("")
     } catch (err) {
@@ -99,20 +89,8 @@ const ReviewForm = ({ productId, onReviewSubmit }) => {
 
       <form onSubmit={handleSubmit}>
         <div className={styles.formGroup}>
-          <label>Your Rating *</label>
-          <div className={styles.ratingSelector} onMouseLeave={handleRatingLeave}>
-            {[1, 2, 3, 4, 5].map((star) => (
-              <button
-                key={star}
-                type="button"
-                className={`${styles.starButton} ${(hoverRating || rating) >= star ? styles.filled : ""}`}
-                onClick={() => handleRatingClick(star)}
-                onMouseEnter={() => handleRatingHover(star)}
-              >
-                <Star size={24} />
-              </button>
-            ))}
-          </div>
+          <label>Your  *</label>
+          
         </div>
 
         <div className={styles.formGroup}>

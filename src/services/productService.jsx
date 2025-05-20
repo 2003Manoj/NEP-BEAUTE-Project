@@ -87,7 +87,7 @@ const generateProducts = () => {
     {
       name: "Blush",
       description: "Natural looking blush for a healthy glow.",
-      image: "https://api.deepai.org/job-view-file/844258de-48ac-4656-b093-e3c2379f24f3/outputs/output.jpg",
+      image: "https://api.deepai.org/job-view-file/4ed2fe59-7824-4371-95a5-f08c8400b1c6/outputs/output.jpg",
     },
     {
       name: "Foundation",
@@ -184,7 +184,7 @@ const generateProducts = () => {
       const price = Math.floor(Math.random() * 1500) + 500 // Random price between 500 and 2000
       const hasDiscount = Math.random() > 0.5
       const originalPrice = hasDiscount ? price + Math.floor(price * (Math.random() * 0.4 + 0.1)) : null
-      const rating = (Math.random() * 2 + 3).toFixed(1) // Random rating between 3 and 5
+     
       const reviewCount = Math.floor(Math.random() * 100) + 5 // Random review count
       const isNew = Math.random() > 0.7
       const isFeatured = Math.random() > 0.7
@@ -198,7 +198,7 @@ const generateProducts = () => {
         originalPrice,
         category,
         brand: brands[Math.floor(Math.random() * brands.length)],
-        rating: Number.parseFloat(rating),
+     
         reviewCount,
         isNew,
         featured: isFeatured,

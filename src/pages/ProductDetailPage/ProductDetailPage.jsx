@@ -106,10 +106,8 @@ const ProductDetailPage = () => {
     ]
 
     // Create a distribution of ratings that averages to avgRating
-    const ratingDistribution = createRatingDistribution(count, avgRating)
 
     for (let i = 0; i < Math.min(count, 20); i++) {
-      const rating = ratingDistribution[i] || Math.floor(Math.random() * 3) + 3 // Default to 3-5 stars
       const nameIndex = Math.floor(Math.random() * names.length)
       const titleIndex = Math.floor(Math.random() * titles.length)
       const commentIndex = Math.floor(Math.random() * comments.length)
@@ -122,7 +120,6 @@ const ProductDetailPage = () => {
         userId: `user-${i + 1}`,
         userName: names[nameIndex],
         userImage: `https://randomuser.me/api/portraits/${Math.random() > 0.5 ? "women" : "men"}/${Math.floor(Math.random() * 100)}.jpg`,
-        rating,
         title: titles[titleIndex],
         text: comments[commentIndex],
         date: new Date(Date.now() - daysAgo * 24 * 60 * 60 * 1000).toISOString(),
